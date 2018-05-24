@@ -34,12 +34,12 @@ class Institute(models.Model):
 # jednostka wspolpracujaca
 class InstituteUnit(models.Model):
     name = models.CharField("Nazwa", max_length=255)
-    institute = models.ForeignKey(Institute, on_delete=models.SET_NULL, blank=True, null=True,
-                                  related_name="institute_units", verbose_name="Katedra")
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
     university_contact_persons = models.ManyToManyField("UniversityContactPerson",
                                                         through="InstituteUnitToUniversityContactPerson")
+    institute = models.ForeignKey(Institute, on_delete=models.SET_NULL, blank=True, null=True,
+                                  related_name="institute_units", verbose_name="Katedra (jeśli związana)")
 
     def __str__(self):
         if self.institute is not None:
@@ -82,7 +82,8 @@ class InstituteUnitToUniversityContactPerson(models.Model):
 
     def __str__(self):
         return "%s - %s %s" % (
-        self.institute_unit.name, self.university_contact_person.first_name, self.university_contact_person.last_name)
+            self.institute_unit.name, self.university_contact_person.first_name,
+            self.university_contact_person.last_name)
 
     class Meta:
         verbose_name = "Przypisana katedra"

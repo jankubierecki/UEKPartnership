@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from university.models import UniversityFaculty, Institute, InstituteUnit, UniversityContactPerson, \
     InstituteUnitToUniversityContactPerson
@@ -7,6 +8,7 @@ from university.models import UniversityFaculty, Institute, InstituteUnit, Unive
 class InstituteInlineAdmin(admin.TabularInline):
     model = Institute
     extra = 0
+    can_delete = True
 
 
 @admin.register(UniversityFaculty)
@@ -51,13 +53,19 @@ class InstituteUnitAdmin(admin.ModelAdmin):
 
     get_institute_name.short_description = "Katedra"
 
+
 # todo add email_href search: link list view django admin
 @admin.register(UniversityContactPerson)
 class UniversityContactAdmin(admin.ModelAdmin):
-    list_display = ["first_name", "last_name", "phone", "email", "academic_title"]
+    list_display = ["first_name", "last_name", "phone", "get_email_url", "academic_title"]
     fields = ["first_name", "last_name", "phone", "email", "academic_title", "created_at", "updated_at"]
     list_filter = ["created_at", "updated_at"]
     readonly_fields = ["created_at", "updated_at"]
     search_fields = list_display
     inlines = [UniversityContactPersonToInstituteUnitInlineAdmin]
 
+    def get_email_url(self, obj: UniversityContactPerson):
+        return format_html('<a href="%s%s">%s' % ('https://www.uek.krakow.pl/', obj.email, obj.email))
+
+    get_email_url.allow_tags = True
+    get_email_url.short_description = 'Email'
