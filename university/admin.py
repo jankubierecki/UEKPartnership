@@ -5,18 +5,21 @@ from university.models import UniversityFaculty, Institute, InstituteUnit, Unive
     InstituteUnitToUniversityContactPerson
 
 
+# set Institute in TabularInline, aka Katedra, which will be pinned into UniversityFaculty, aka Wydział
 class InstituteInlineAdmin(admin.TabularInline):
     model = Institute
     extra = 0
     can_delete = True
 
 
+# register UniversityFaculty, aka Wydział with Institute
 @admin.register(UniversityFaculty)
 class UniversityFacultyAdmin(admin.ModelAdmin):
     list_display = ["name"]
     inlines = [InstituteInlineAdmin]
 
 
+# set TabularInline relation between Jednostka Współpracująca and Jednostka do kontaktu UEK
 class InstituteUnitToUniversityContactPersonInlineAdmin(admin.TabularInline):
     model = InstituteUnitToUniversityContactPerson
     extra = 0
@@ -25,6 +28,7 @@ class InstituteUnitToUniversityContactPersonInlineAdmin(admin.TabularInline):
     readonly_fields = ['created_at']
 
 
+# set Osoba do kontaktu UEK panel in Jednostka Współpracująca admin view
 class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversityContactPersonInlineAdmin):
     fields = ['institute_unit', 'created_at']
     can_delete = False
@@ -35,9 +39,10 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
         return False
 
 
+# register InstituteUnit, aka Jednostka Współpracująca
 @admin.register(InstituteUnit)
 class InstituteUnitAdmin(admin.ModelAdmin):
-    list_display = ["get_institute_name", "name", "created_at", "updated_at"]
+    list_display = ["name", "created_at", "updated_at", "get_institute_name"]
     search_fields = ["name", "institute__name"]
     list_filter = ["institute", "created_at", "updated_at"]
     fields = ["name", "institute", "created_at", "updated_at"]
@@ -54,7 +59,7 @@ class InstituteUnitAdmin(admin.ModelAdmin):
     get_institute_name.short_description = "Katedra"
 
 
-# todo add email_href search: link list view django admin
+# register UniversityContactPerson, aka Osoby Do kontaktu UEK
 @admin.register(UniversityContactPerson)
 class UniversityContactAdmin(admin.ModelAdmin):
     list_display = ["first_name", "last_name", "phone", "get_email_url", "academic_title"]
@@ -64,8 +69,9 @@ class UniversityContactAdmin(admin.ModelAdmin):
     search_fields = list_display
     inlines = [UniversityContactPersonToInstituteUnitInlineAdmin]
 
+    # change plain text email in Osoba do kontaktu UEK admin view, to link which points to specific Person
     def get_email_url(self, obj: UniversityContactPerson):
-        return format_html('<a href="%s%s">%s' % ('https://www.uek.krakow.pl/', obj.email, obj.email))
+        return format_html('<a href="%s">%s' % (obj.id, obj.email))
 
     get_email_url.allow_tags = True
     get_email_url.short_description = 'Email'

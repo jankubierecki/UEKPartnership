@@ -3,7 +3,7 @@ from django.core.validators import EmailValidator
 from django.db import models
 
 
-# wydzial
+# UniversityFaculty model, aka Wydział
 class UniversityFaculty(models.Model):
     name = models.CharField("Nazwa", max_length=255)
 
@@ -16,7 +16,7 @@ class UniversityFaculty(models.Model):
         ordering = ["name"]
 
 
-# katedra
+# Institute model, aka Katedra
 class Institute(models.Model):
     name = models.CharField("Nazwa", max_length=255)
     university_faculty = models.ForeignKey(UniversityFaculty, on_delete=models.CASCADE,
@@ -31,7 +31,7 @@ class Institute(models.Model):
         ordering = ["name"]
 
 
-# jednostka wspolpracujaca
+# InstutiteUnit model, aka jednostka wspolpracujaca
 class InstituteUnit(models.Model):
     name = models.CharField("Nazwa", max_length=255)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
@@ -39,7 +39,7 @@ class InstituteUnit(models.Model):
     university_contact_persons = models.ManyToManyField("UniversityContactPerson",
                                                         through="InstituteUnitToUniversityContactPerson")
     institute = models.ForeignKey(Institute, on_delete=models.SET_NULL, blank=True, null=True,
-                                  related_name="institute_units", verbose_name="Katedra (jeśli związana)")
+                                  related_name="institute_units", verbose_name="Katedra (opcjonalnie)")
 
     def __str__(self):
         if self.institute is not None:
@@ -53,7 +53,7 @@ class InstituteUnit(models.Model):
         ordering = ["institute__name", "name"]
 
 
-# jednostka do kontaktu UEK
+# UniversityContactPerson model, aka jednostka do kontaktu UEK
 class UniversityContactPerson(models.Model):
     first_name = models.CharField("Imię", max_length=255)
     last_name = models.CharField("Nazwisko", max_length=255)
@@ -73,6 +73,7 @@ class UniversityContactPerson(models.Model):
         ordering = ["last_name", "first_name"]
 
 
+# many to many relation between Jednostka Współpracująca and Osoby do Kontaktu UEK
 class InstituteUnitToUniversityContactPerson(models.Model):
     institute_unit = models.ForeignKey(InstituteUnit, verbose_name="Jednostka Współpracująca UEK",
                                        on_delete=models.CASCADE)
@@ -86,6 +87,6 @@ class InstituteUnitToUniversityContactPerson(models.Model):
             self.university_contact_person.last_name)
 
     class Meta:
-        verbose_name = "Przypisana katedra"
-        verbose_name_plural = "Przypisane katedry"
+        verbose_name = "Przypisana osoba"
+        verbose_name_plural = "Przypisane osoby"
         ordering = ["-created_at"]
