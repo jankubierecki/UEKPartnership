@@ -9,7 +9,12 @@ class ReadOnlyModelAdmin(object):
     if one actually tries to edit an object.
     Source: https://gist.github.com/aaugustin/1388243
     """
-    actions = None
+
+    def get_actions(self, request):
+        if request.user.is_superuser:
+            return super(ReadOnlyModelAdmin, self).get_actions(request)
+        else:
+            return None
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None and self.has_only_view_permission(request, obj):

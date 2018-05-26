@@ -17,9 +17,6 @@ class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInli
     fields = ['company', 'created_at']
     verbose_name_plural = "Przypisane Firmy"
 
-    def has_add_permission(self, request):
-        return False
-
 
 @admin.register(Company)
 class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):

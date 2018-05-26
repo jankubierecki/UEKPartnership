@@ -43,7 +43,7 @@ class InstituteUnit(models.Model):
         if self.institute is not None:
             return "[%s] %s" % (self.institute.name, self.name)
         else:
-            return "[brak wydziału] %s" % self.name
+            return "[brak katedry] %s" % self.name
 
     class Meta:
         verbose_name = "Jednostka Współpracująca UEK"
