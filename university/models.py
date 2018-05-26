@@ -3,7 +3,6 @@ from django.db import models
 from . import validators
 
 
-# UniversityFaculty model, aka Wydział
 class UniversityFaculty(models.Model):
     name = models.CharField("Nazwa", max_length=255)
 
@@ -16,7 +15,6 @@ class UniversityFaculty(models.Model):
         ordering = ["name"]
 
 
-# Institute model, aka Katedra
 class Institute(models.Model):
     name = models.CharField("Nazwa", max_length=255)
     university_faculty = models.ForeignKey(UniversityFaculty, on_delete=models.CASCADE,
@@ -31,7 +29,6 @@ class Institute(models.Model):
         ordering = ["name"]
 
 
-# InstutiteUnit model, aka jednostka wspolpracujaca
 class InstituteUnit(models.Model):
     name = models.CharField("Nazwa", max_length=255)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
@@ -54,19 +51,17 @@ class InstituteUnit(models.Model):
         ordering = ["institute__name", "name"]
 
 
-# UniversityContactPerson model, aka jednostka do kontaktu UEK
 class UniversityContactPerson(models.Model):
     first_name = models.CharField("Imię", max_length=255)
     last_name = models.CharField("Nazwisko", max_length=255)
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
     email = models.EmailField("Email", max_length=50, blank=True, null=True,
-                              validators=[validators.email_validation])
+                              validators=[validators.email_validation], help_text="Tylko z domeną UEK")
     academic_title = models.CharField("Tytuł naukowy", max_length=50, blank=True, null=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
 
     # todo add aktywne współprace field
-    # todo should i validate email
 
     def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)
@@ -77,7 +72,6 @@ class UniversityContactPerson(models.Model):
         ordering = ["last_name", "first_name"]
 
 
-# many to many relation between Jednostka Współpracująca and Osoby do Kontaktu UEK
 class InstituteUnitToUniversityContactPerson(models.Model):
     institute_unit = models.ForeignKey(InstituteUnit, verbose_name="Jednostka Współpracująca UEK",
                                        on_delete=models.CASCADE)

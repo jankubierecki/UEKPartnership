@@ -1,26 +1,26 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
+from common.admin import ReadOnlyModelAdmin
 from university.models import UniversityFaculty, Institute, InstituteUnit, UniversityContactPerson, \
     InstituteUnitToUniversityContactPerson
 
 
-# set Institute in TabularInline, aka Katedra, which will be pinned into UniversityFaculty, aka Wydział
-class InstituteInlineAdmin(admin.TabularInline):
+class InstituteInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
     model = Institute
+    fields = ['name']
     extra = 0
     can_delete = True
 
 
-# register UniversityFaculty, aka Wydział with Institute
 @admin.register(UniversityFaculty)
-class UniversityFacultyAdmin(admin.ModelAdmin):
+class UniversityFacultyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = ["name"]
+    fields = ['name']
     inlines = [InstituteInlineAdmin]
 
 
-# set TabularInline relation between Jednostka Współpracująca and Jednostka do kontaktu UEK
-class InstituteUnitToUniversityContactPersonInlineAdmin(admin.TabularInline):
+class InstituteUnitToUniversityContactPersonInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
     model = InstituteUnitToUniversityContactPerson
     extra = 0
     verbose_name_plural = "Przypisane osoby"
@@ -28,7 +28,6 @@ class InstituteUnitToUniversityContactPersonInlineAdmin(admin.TabularInline):
     readonly_fields = ['created_at']
 
 
-# set Osoba do kontaktu UEK panel in Jednostka Współpracująca admin view
 class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversityContactPersonInlineAdmin):
     fields = ['institute_unit', 'created_at']
     can_delete = False
@@ -39,9 +38,10 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
         return False
 
 
-# register InstituteUnit, aka Jednostka Współpracująca
+# todo add aktywne wspolprace
+
 @admin.register(InstituteUnit)
-class InstituteUnitAdmin(admin.ModelAdmin):
+class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = ["name", "created_at", "updated_at", "get_institute_name"]
     search_fields = ["name", "institute__name"]
     list_filter = ["institute", "created_at", "updated_at"]
@@ -59,9 +59,10 @@ class InstituteUnitAdmin(admin.ModelAdmin):
     get_institute_name.short_description = "Katedra"
 
 
-# register UniversityContactPerson, aka Osoby Do kontaktu UEK
+# todo add aktywne wspolprace
+
 @admin.register(UniversityContactPerson)
-class UniversityContactAdmin(admin.ModelAdmin):
+class UniversityContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = ["first_name", "last_name", "phone", "get_email_url", "academic_title"]
     fields = ["first_name", "last_name", "phone", "email", "academic_title", "created_at", "updated_at"]
     list_filter = ["created_at", "updated_at"]
@@ -69,7 +70,6 @@ class UniversityContactAdmin(admin.ModelAdmin):
     search_fields = list_display
     inlines = [UniversityContactPersonToInstituteUnitInlineAdmin]
 
-    # change plain text email in Osoba do kontaktu UEK admin view, to link which points to specific Person
     def get_email_url(self, obj: UniversityContactPerson):
         return format_html('<a href="%s">%s' % (obj.id, obj.email))
 
