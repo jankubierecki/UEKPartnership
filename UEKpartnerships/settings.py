@@ -121,4 +121,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-WHITELISTED_EMAIL_NAMES = ["@uek.krakow.pl"]
+
