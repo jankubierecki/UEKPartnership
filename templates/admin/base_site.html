@@ -1,0 +1,96 @@
+{% extends "admin/base.html" %}
+{% load staticfiles %}
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+{% block extrastyle %}
+    {{ block.super }}
+    <script>
+    </script>
+    <style>
+        html, body, #container {
+            min-height: 100%;
+        }
+        html, body {
+            height: 100%;
+        }
+        #site-name a {
+            display: flex;
+            align-items: center;
+            margin-bottom:10px;
+            margin-top:10px;
+        }
+        #site-name a img {
+            width: 60px;
+            margin-right:10px;
+        }
+        #header {
+            height: auto;
+        }
+        #header, div.breadcrumbs, .module h2, .module caption, .inline-group h2 {
+            background: #6b1c1c;
+        }
+        .default {
+            background: #4caf50 !important;
+        }
+        .button, input[type=submit], input[type=button], .submit-row input, a.button {
+            background: rgba(76, 175, 80, 0.6);
+        }
+        .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+            background: rgba(76, 175, 80, 1) !important;
+        }
+        div.breadcrumbs {
+            border-top: 1px solid rgba(255, 255, 255, 0.16);
+        }
+        #branding h1 a, #user-tools, #user-tools a {
+            color: white !important;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+        }
+        #container #content {
+            flex-grow: 1;
+        }
+        #footer {
+            padding: 20px 40px;
+        }
+        #footer div {
+            border-top: 1px solid #d9d9d9;
+        }
+        #footer h4 {
+            opacity: 0.5;
+            display: inline-block;
+        }
+        .login #footer {
+            display: none !important;
+        }
+        .login #container {
+            display: block !important;
+            height: auto !important;
+            min-height: auto !important;
+        }
+        .login #content {
+            padding: 20px 20px !important;
+        }
+    </style>
+{% endblock %}
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">
+
+        <img src="{% static 'website/img/logo_white.svg' %}" alt="">
+        {{ site_title }}</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+{% block footer %}
+    <div id="footer">
+        <div>
+            <h4>
+                UNIWERSYTET PEDAGOGICZNY<br>
+                im. Komisji Edukacji Narodowej w Krakowie
+            </h4>
+            <h4 style="float:right;text-align:right;">
+                <a href="mailto:gregorczyk@me.com">KAMIL GREGORCZYK</a> <br>
+                WMFT - Praca licencjacka 2016 r.
+            </h4>
+        </div>
+    </div>{% endblock %}

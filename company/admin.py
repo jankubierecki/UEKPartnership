@@ -11,11 +11,13 @@ class CompanyToCompanyContactPersonInlineAdmin(admin.TabularInline):
     verbose_name_plural = "Przypisane osoby do kontaktu"
     fields = ['company_contact_person', 'created_at']
     readonly_fields = ['created_at']
+    autocomplete_fields = ["company_contact_person"]
 
 
 class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInlineAdmin):
     fields = ['company', 'created_at']
     verbose_name_plural = "Przypisane Firmy"
+    autocomplete_fields = ["company"]
 
 
 @admin.register(Company)
@@ -42,7 +44,7 @@ class CompanyContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     fields = ["first_name", "last_name", "phone", "email", "created_at", "updated_at"]
     list_filter = ["created_at", "updated_at"]
     readonly_fields = ["created_at", "updated_at"]
-    search_fields = list_display
+    search_fields = ["first_name", "last_name", "phone"]
     inlines = [CompanyContactPersonToCompanyInlineAdmin]
 
     def get_email_url(self, obj: CompanyContactPerson):

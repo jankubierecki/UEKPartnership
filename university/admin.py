@@ -6,6 +6,12 @@ from university.models import UniversityFaculty, Institute, InstituteUnit, Unive
     InstituteUnitToUniversityContactPerson
 
 
+@admin.register(Institute)
+class InstituteAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
+    fields = ["name"]
+    search_fields = ["name", "university_faculty__name"]
+
+
 class InstituteInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
     model = Institute
     fields = ['name']
@@ -26,6 +32,7 @@ class InstituteUnitToUniversityContactPersonInlineAdmin(ReadOnlyModelAdmin, admi
     verbose_name_plural = "Przypisane osoby"
     fields = ['university_contact_person', 'created_at']
     readonly_fields = ['created_at']
+    autocomplete_fields = ["university_contact_person"]
 
 
 class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversityContactPersonInlineAdmin):
@@ -49,6 +56,10 @@ class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     readonly_fields = ["created_at", "updated_at"]
     filter_horizontal = ['university_contact_persons']
     inlines = [InstituteUnitToUniversityContactPersonInlineAdmin]
+    autocomplete_fields = ["institute"]
+
+    def get_queryset(self, request):
+        return InstituteUnit.objects.select_related("institute").select_related("institute__university_faculty").all()
 
     def get_institute_name(self, obj: InstituteUnit):
         if obj.institute is not None:
@@ -67,7 +78,7 @@ class UniversityContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     fields = ["first_name", "last_name", "phone", "email", "academic_title", "created_at", "updated_at"]
     list_filter = ["created_at", "updated_at"]
     readonly_fields = ["created_at", "updated_at"]
-    search_fields = list_display
+    search_fields = ["first_name", "last_name", "phone", "academic_title"]
     inlines = [UniversityContactPersonToInstituteUnitInlineAdmin]
 
     def get_email_url(self, obj: UniversityContactPerson):

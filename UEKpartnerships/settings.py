@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'company.apps.CompanyConfig',
     'university.apps.UniversityConfig',
     'partnerships.apps.PartnershipsConfig',
+    'authorization.apps.AuthorizationConfig',
+    'django_admin_listfilter_dropdown',
 ]
 
 MIDDLEWARE = [
@@ -104,6 +106,28 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        }
+    }
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -121,5 +145,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
