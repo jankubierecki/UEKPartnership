@@ -3,6 +3,7 @@ from django.utils.html import format_html
 
 from common.admin import ReadOnlyModelAdmin
 from company.models import CompanyToCompanyContactPerson, Company, CompanyContactPerson
+from university.views import CompanyContactPersonAutocomplete
 
 
 class CompanyToCompanyContactPersonInlineAdmin(admin.TabularInline):
@@ -26,8 +27,6 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
                     "updated_at"]
     search_fields = ["name", "city", "zip_code", "industry"]
     list_filter = ["created_at", "updated_at"]
-    fields_2 = ["name", "city", "street", "zip_code", "phone", "industry", "krs_code", "website", "created_at",
-                "updated_at"]
     fieldsets = (
         ("Informacje podstawowe", {'fields': ['name', 'phone', 'website']}),
         ("Dane do kontaktu", {'fields': [('city', 'street', 'zip_code')]}),
@@ -49,6 +48,9 @@ class CompanyContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     def get_email_url(self, obj: CompanyContactPerson):
         return format_html('<a href="%s">%s' % (obj.id, obj.email))
+
+    def autocomplete_view(self, request):
+        return CompanyContactPersonAutocomplete.as_view(model_admin=self)(request)
 
     get_email_url.allow_tags = True
     get_email_url.short_description = 'Email'

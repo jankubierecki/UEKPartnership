@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.admin import DateFieldListFilter, AllValuesFieldListFilter, ChoicesFieldListFilter
+from django.contrib.admin import DateFieldListFilter, ChoicesFieldListFilter
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from common.admin import ReadOnlyModelAdmin
@@ -23,12 +23,12 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
 @admin.register(Partnership)
 class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     inlines = [ContractInlineAdmin]
+    change_form_template = "admin/partnership_change_form.html"
     search_fields = ['contract_date', 'last_contract_date', 'university_contact_person']
     list_display = ['name', 'get_company_name', 'get_institute_unit_name', 'contract_date', 'last_contact_date',
                     'kind_of_partnership', 'type_of_partnership']
     fields = ['name', 'contract_date', 'last_contact_date', 'university_contact_person', 'company_contact_person',
               'kind_of_partnership', 'type_of_partnership']
-    create_fields = ['contract_date', 'last_contact_date', "name", "kind_of_partnership", "type_of_partnership"]
     list_filter = (
         ('contract_date', DateFieldListFilter),
         ('university_contact_person', RelatedDropdownFilter),
@@ -37,7 +37,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     )
 
-    # autocomplete_fields = ['university_contact_person', 'company_contact_person']
+    autocomplete_fields = ['university_contact_person', 'company_contact_person']
 
     def get_company_name(self, obj: Partnership):
         return obj.contract.company.name
@@ -49,16 +49,19 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     get_institute_unit_name.short_description = "Nazwa jednostki UEK"
 
-    def get_fields(self, request, obj=None):
-        if obj is None:
-            return self.create_fields
-        return self.fields
-
     def get_form(self, request, obj=None, **kwargs):
         form = super(PartnershipAdmin, self).get_form(request, obj, **kwargs)
         if obj is not None and 'company_contact_person' in form.base_fields and 'university_contact_person' in form.base_fields:
-            form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
-                companytocompanycontactperson__company=obj.contract.company)
-            form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
-                instituteunit=obj.contract.institute_unit)
+            if request.POST:
+                company_id = int(request.POST['contract-0-company'])
+                institute_unit_id = int(request.POST['contract-0-institute_unit'])
+                form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
+                    companytocompanycontactperson__company_id=company_id)
+                form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
+                    institute_units__institute_unit=institute_unit_id)
+            else:
+                form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
+                    companytocompanycontactperson__company=obj.contract.company)
+                form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
+                    institute_units__institute_unit=obj.contract.institute_unit)
         return form

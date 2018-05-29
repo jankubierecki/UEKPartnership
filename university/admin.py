@@ -4,6 +4,7 @@ from django.utils.html import format_html
 from common.admin import ReadOnlyModelAdmin
 from university.models import UniversityFaculty, Institute, InstituteUnit, UniversityContactPerson, \
     InstituteUnitToUniversityContactPerson
+from university.views import UniversityContactPersonAutocomplete
 
 
 @admin.register(Institute)
@@ -37,12 +38,7 @@ class InstituteUnitToUniversityContactPersonInlineAdmin(ReadOnlyModelAdmin, admi
 
 class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversityContactPersonInlineAdmin):
     fields = ['institute_unit', 'created_at']
-    can_delete = False
-    readonly_fields = ['institute_unit', 'created_at']
     verbose_name_plural = "Przypisane jednostki współpracujące UEK"
-
-    def has_add_permission(self, request):
-        return False
 
 
 # todo add aktywne wspolprace
@@ -80,6 +76,9 @@ class UniversityContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     readonly_fields = ["created_at", "updated_at"]
     search_fields = ["first_name", "last_name", "phone", "academic_title"]
     inlines = [UniversityContactPersonToInstituteUnitInlineAdmin]
+
+    def autocomplete_view(self, request):
+        return UniversityContactPersonAutocomplete.as_view(model_admin=self)(request)
 
     def get_email_url(self, obj: UniversityContactPerson):
         return format_html('<a href="%s">%s' % (obj.id, obj.email))
