@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+workon partnerships
 pip3 install -r requirements.txt
 python3 manage.py collectstatic --no imput
 python3 manage.py migrate
