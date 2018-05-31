@@ -118,6 +118,10 @@ LOGGING = {
             'level': 'DEBUG',
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
         }
     },
     'loggers': {
@@ -125,7 +129,13 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console'],
         }
-    }
+    },
+    'django.request': {
+        'handlers': ['mail_admins'],
+        'level': 'ERROR',
+        'propagate': True,
+    },
+
 }
 
 # Internationalization

@@ -14,10 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import path
+
+from partnerships.views import ErrorEmailTest
 
 urlpatterns = [
     path('', admin.site.urls),
+    path('test500/', login_required(ErrorEmailTest.as_view()))
 
 ]
 admin.site.site_header = "Współprace UEK"
