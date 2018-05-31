@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'partnerships.apps.PartnershipsConfig',
     'authorization.apps.AuthorizationConfig',
     'django_admin_listfilter_dropdown',
+    'admin_reorder',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 ROOT_URLCONF = 'UEKpartnerships.urls'
@@ -156,3 +158,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+ADMIN_REORDER = (
+    'company',
+    {'app': 'university', 'models': (
+        'university.InstituteUnit', 'university.UniversityContactPerson', 'university.UniversityFaculty',
+        'university.Institute')},
+    'partnerships',
+    'auth',
+
+)

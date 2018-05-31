@@ -3,3 +3,4 @@ psycopg2-binary==2.7.4
 django-admin-view-permission==1.6
 gunicorn
 django-admin-list-filter-dropdown
+django-modeladmin-reorder

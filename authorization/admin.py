@@ -5,8 +5,6 @@ from django.contrib.auth.models import User, Group
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
-from partnerships.models import Partnership
-
 admin.site.unregister(User)
 
 
