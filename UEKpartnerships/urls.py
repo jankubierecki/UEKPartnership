@@ -24,5 +24,5 @@ urlpatterns = [
     path('test500/', login_required(ErrorEmailTest.as_view()))
 
 ]
-admin.site.site_header = "Współprace UEK"
-admin.site.site_title = "Współprace UEK"
+admin.site.site_header = "Współprace Biznesowe UEK"
+admin.site.site_title = "Współprace Biznesowe UEK"
