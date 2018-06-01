@@ -1,7 +1,7 @@
 from django.db import models
 
-from company import models as company_models
-from university import models as university_models
+from company.models import Company, CompanyContactPerson
+from university.models import InstituteUnit, UniversityContactPerson
 
 
 class Contract(models.Model):
@@ -9,11 +9,11 @@ class Contract(models.Model):
     amount = models.FloatField("Kwota w złotówkach", null=True, blank=True)
     contract_number = models.CharField("Numer umowy", max_length=100)
     additional_info = models.TextField("Dodatkowe Informacje", null=True, blank=True)
-    company = models.ForeignKey(company_models.Company, on_delete=models.CASCADE, related_name="contracts",
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="contracts",
                                 verbose_name="Firmy")
     partnership = models.OneToOneField("Partnership", on_delete=models.SET_NULL, null=True, related_name="contract",
                                        verbose_name="Współprace")
-    institute_unit = models.ForeignKey(university_models.InstituteUnit, on_delete=models.CASCADE, null=True,
+    institute_unit = models.ForeignKey(InstituteUnit, on_delete=models.CASCADE, null=True,
                                        related_name="contracts",
                                        verbose_name="Jednostki Współpracujące")
 
@@ -40,10 +40,10 @@ class Partnership(models.Model):
         ("organizational", "Organizacyjna"),
         ("training", "Szkoleniowa")
     )
-    company_contact_person = models.ForeignKey(company_models.CompanyContactPerson, on_delete=models.SET_NULL,
+    company_contact_person = models.ForeignKey(CompanyContactPerson, on_delete=models.SET_NULL,
                                                null=True,
                                                related_name="partnerships", verbose_name="Osoby Do kontaktu Firmy")
-    university_contact_person = models.ForeignKey(university_models.UniversityContactPerson, on_delete=models.SET_NULL,
+    university_contact_person = models.ForeignKey(UniversityContactPerson, on_delete=models.SET_NULL,
                                                   null=True,
                                                   related_name="partnerships", verbose_name="Osoby Do kontaktu UEK")
     contract_date = models.DateField("Data rozpoczęcia współpracy")

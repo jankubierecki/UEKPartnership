@@ -24,7 +24,9 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
 class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     inlines = [ContractInlineAdmin]
     change_form_template = "admin/partnership_change_form.html"
-    search_fields = ['contract_date', 'last_contract_date', 'university_contact_person']
+    search_fields = ['contract_date', 'last_contact_date', 'university_contact_person__first_name',
+                     'university_contact_person__last_name', 'company_contact_person__first_name',
+                     'company_contact_person__last_name', ]
     list_display = ['name', 'get_company_name', 'get_institute_unit_name', 'contract_date', 'last_contact_date',
                     'kind_of_partnership', 'type_of_partnership']
     fields = ['name', 'contract_date', 'last_contact_date', 'university_contact_person', 'company_contact_person',
@@ -32,6 +34,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_filter = (
         ('contract_date', DateFieldListFilter),
         ('university_contact_person', RelatedDropdownFilter),
+        ('company_contact_person', RelatedDropdownFilter),
         ('type_of_partnership', ChoicesFieldListFilter),
         ('kind_of_partnership', ChoicesFieldListFilter),
 

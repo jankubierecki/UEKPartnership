@@ -18,7 +18,8 @@ class Company(models.Model):
     company_size = models.CharField("Wielkość firmy", max_length=64, blank=True)
     krs_code = models.CharField("Numer KRS", max_length=10, blank=False, null=False,
                                 validators=[validators.validate_krs])
-    company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson", related_name="companies")
+    company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson",
+                                                     related_name="companies")
 
     def __str__(self):
         return self.name
