@@ -41,11 +41,9 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
     verbose_name_plural = "Przypisane jednostki współpracujące UEK"
 
 
-# todo add aktywne wspolprace
-
 @admin.register(InstituteUnit)
 class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    list_display = ["name", "get_institute_name",  "created_at", "updated_at"]
+    list_display = ["name", "get_institute_name", "created_at", "updated_at"]
     search_fields = ["name", "institute__name"]
     list_filter = ["institute", "created_at", "updated_at"]
     fields = ["name", "institute", "created_at", "updated_at"]
@@ -65,8 +63,6 @@ class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     get_institute_name.short_description = "Katedra"
 
-
-# todo add aktywne wspolprace
 
 @admin.register(UniversityContactPerson)
 class UniversityContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):

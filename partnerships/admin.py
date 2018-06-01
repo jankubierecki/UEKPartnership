@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import DateFieldListFilter, ChoicesFieldListFilter
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from common.admin import ReadOnlyModelAdmin
@@ -19,7 +21,6 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
     autocomplete_fields = ["institute_unit", "company"]
 
 
-# todo add all links
 @admin.register(Partnership)
 class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     inlines = [ContractInlineAdmin]
@@ -43,12 +44,17 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     autocomplete_fields = ['university_contact_person', 'company_contact_person']
 
     def get_company_name(self, obj: Partnership):
-        return obj.contract.company.name
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(reverse("admin:company_company_change", args=(obj.contract.company.pk,)),
+                                         obj.contract.company.name))
 
     get_company_name.short_description = "Firma współpracująca"
 
     def get_institute_unit_name(self, obj: Partnership):
-        return obj.contract.institute_unit.name
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse("admin:university_instituteunit_change", args=(obj.contract.institute_unit.pk,)),
+                obj.contract.institute_unit.name))
 
     get_institute_unit_name.short_description = "Nazwa jednostki UEK"
 

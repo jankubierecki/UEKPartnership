@@ -3,7 +3,6 @@ from django.db import models
 from . import validators
 
 
-# todo add aktywne współprace field
 class Company(models.Model):
     name = models.CharField("Nazwa", max_length=255)
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
@@ -30,7 +29,6 @@ class Company(models.Model):
         ordering = ["name"]
 
 
-# todo add aktywne współprace field
 class CompanyContactPerson(models.Model):
     first_name = models.CharField("Imię", max_length=255)
     last_name = models.CharField("Nazwisko", max_length=255)
