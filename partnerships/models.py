@@ -40,6 +40,14 @@ class Partnership(models.Model):
         ("organizational", "Organizacyjna"),
         ("training", "Szkoleniowa")
     )
+
+    STATUS_OF_PARTNERSHIP = (
+        ("finished", "Zakończona"),
+        ("paid_and_on", "Opłacona - w trakcie"),
+        ("started_not_paid", "Nieopłacona - w trakcie"),
+        ("other", "Inna")
+    )
+
     company_contact_person = models.ForeignKey(CompanyContactPerson, on_delete=models.SET_NULL,
                                                null=True,
                                                related_name="partnerships", verbose_name="Osoby Do kontaktu Firmy")
@@ -53,6 +61,7 @@ class Partnership(models.Model):
                                            default=TYPES_OF_PARTNERSHIPS[1][0])
     kind_of_partnership = models.CharField("Rodzaj współpracy", max_length=255, choices=KINDS_OF_PARTNERSHIPS,
                                            default=KINDS_OF_PARTNERSHIPS[1][0])
+    status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP, default=[2][0])
 
     def __str__(self):
         return "%s %s" % (self.contract.contract_number, self.contract.company.name)

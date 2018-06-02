@@ -25,20 +25,22 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
 class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     inlines = [ContractInlineAdmin]
     change_form_template = "admin/partnership_change_form.html"
+    change_list_template = "admin/partnership_change_list.html"
     search_fields = ['contract_date', 'last_contact_date', 'university_contact_person__first_name',
                      'university_contact_person__last_name', 'company_contact_person__first_name',
                      'company_contact_person__last_name', ]
     list_display = ['name', 'get_company_name', 'get_company_contact_person_name_url', 'get_institute_unit_name',
                     'get_university_contact_person_name_url', 'contract_date', 'last_contact_date',
-                    'kind_of_partnership', 'type_of_partnership']
+                    'get_status_with_color']
     fields = ['name', 'contract_date', 'last_contact_date', 'university_contact_person', 'company_contact_person',
-              'kind_of_partnership', 'type_of_partnership']
+              'kind_of_partnership', 'type_of_partnership', 'status']
     list_filter = (
         ('contract_date', DateFieldListFilter),
         ('university_contact_person', RelatedDropdownFilter),
         ('company_contact_person', RelatedDropdownFilter),
         ('type_of_partnership', ChoicesFieldListFilter),
         ('kind_of_partnership', ChoicesFieldListFilter),
+        ('status', ChoicesFieldListFilter),
 
     )
 
@@ -74,6 +76,26 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
                 obj.company_contact_person.email))
 
     get_company_contact_person_name_url.short_description = "Osoba do kontaktu Firmy"
+
+    def get_status_with_color(self, obj: Partnership):
+        if obj.status == 'finished':
+            return mark_safe(
+                '<div style="width:100%%; height:100%%; color:grey;">%s</div>' % obj.status.replace(obj.status,
+                                                                                                    'Zakończona'))
+        if obj.status == 'paid_and_on':
+            return mark_safe(
+                '<div style="width:100%%; height:100%%; color:green;">%s</div>' % obj.status.replace(obj.status,
+                                                                                                     'Opłacona - w trakcie'))
+        if obj.status == 'started_not_paid':
+            return mark_safe(
+                '<div style="width:100%%; height:100%%; color:red;">%s</div>' % obj.status.replace(obj.status,
+                                                                                                   'Nieopłacona - w trakcie'))
+        if obj.status == 'other':
+            return mark_safe(
+                '<div style="width:100%%; height:100%%; color:black;">%s</div>' % obj.status.replace(obj.status,
+                                                                                                     'Inna'))
+
+    get_status_with_color.short_description = "Status"
 
 
 def get_form(self, request, obj=None, **kwargs):
