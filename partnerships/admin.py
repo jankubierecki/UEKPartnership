@@ -28,7 +28,8 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     search_fields = ['contract_date', 'last_contact_date', 'university_contact_person__first_name',
                      'university_contact_person__last_name', 'company_contact_person__first_name',
                      'company_contact_person__last_name', ]
-    list_display = ['name', 'get_company_name', 'get_institute_unit_name', 'contract_date', 'last_contact_date',
+    list_display = ['name', 'get_company_name', 'get_company_contact_person_name_url', 'get_institute_unit_name',
+                    'get_university_contact_person_name_url', 'contract_date', 'last_contact_date',
                     'kind_of_partnership', 'type_of_partnership']
     fields = ['name', 'contract_date', 'last_contact_date', 'university_contact_person', 'company_contact_person',
               'kind_of_partnership', 'type_of_partnership']
@@ -57,6 +58,22 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
                 obj.contract.institute_unit.name))
 
     get_institute_unit_name.short_description = "Nazwa jednostki UEK"
+
+    def get_university_contact_person_name_url(self, obj: Partnership):
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse("admin:university_universitycontactperson_change", args=(obj.university_contact_person.id,)),
+                obj.university_contact_person.email))
+
+    get_university_contact_person_name_url.short_description = "Osoba do kontaktu UEK"
+
+    def get_company_contact_person_name_url(self, obj: Partnership):
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse("admin:company_companycontactperson_change", args=(obj.company_contact_person,)),
+                obj.company_contact_person.email))
+
+    get_company_contact_person_name_url.short_description = "Osoba do kontaktu Firmy"
 
 
 def get_form(self, request, obj=None, **kwargs):
