@@ -28,6 +28,7 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     search_fields = ["name", "city", "zip_code", "industry", "company_contact_persons__first_name",
                      "company_contact_persons__last_name"]
     list_filter = ["created_at", "updated_at"]
+
     fieldsets = (
         ("Informacje podstawowe", {'fields': ['name', 'phone', 'website']}),
         ("Dane do kontaktu", {'fields': [('city', 'street', 'zip_code')]}),

@@ -38,7 +38,6 @@ class InstituteUnit(models.Model):
     institute = models.ForeignKey(Institute, on_delete=models.SET_NULL, blank=True, null=True,
                                   related_name="institute_units", verbose_name="Katedra (opcjonalnie)")
 
-    # todo add aktywne współprace field
     def __str__(self):
         if self.institute is not None:
             return "[%s] %s" % (self.institute.name, self.name)
@@ -60,8 +59,6 @@ class UniversityContactPerson(models.Model):
     academic_title = models.CharField("Tytuł naukowy", max_length=50, blank=True, null=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
-
-    # todo add aktywne współprace field
 
     def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)

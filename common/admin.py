@@ -18,9 +18,10 @@ class ReadOnlyModelAdmin(object):
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None and self.has_only_view_permission(request, obj):
-            if not self.fields:
-                raise ValueError("`fields` field has to be set!")
-            return self.fields
+            if not self.fields and not self.fieldsets:
+                raise ValueError("`fields` or `fieldsets` field has to be set!")
+            if self.fields:
+                return self.fields
         return super(ReadOnlyModelAdmin, self).get_readonly_fields(request, obj)
 
     def has_change_permission(self, request, obj=None):

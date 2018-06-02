@@ -58,19 +58,20 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     get_institute_unit_name.short_description = "Nazwa jednostki UEK"
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(PartnershipAdmin, self).get_form(request, obj, **kwargs)
-        if obj is not None and 'company_contact_person' in form.base_fields and 'university_contact_person' in form.base_fields:
-            if request.POST:
-                company_id = int(request.POST['contract-0-company'])
-                institute_unit_id = int(request.POST['contract-0-institute_unit'])
-                form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
-                    companytocompanycontactperson__company_id=company_id)
-                form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
-                    institute_units__institute_unit=institute_unit_id)
-            else:
-                form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
-                    companytocompanycontactperson__company=obj.contract.company)
-                form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
-                    institute_units__institute_unit=obj.contract.institute_unit)
-        return form
+
+def get_form(self, request, obj=None, **kwargs):
+    form = super(PartnershipAdmin, self).get_form(request, obj, **kwargs)
+    if obj is not None and 'company_contact_person' in form.base_fields and 'university_contact_person' in form.base_fields:
+        if request.POST:
+            company_id = int(request.POST['contract-0-company'])
+            institute_unit_id = int(request.POST['contract-0-institute_unit'])
+            form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
+                companytocompanycontactperson__company_id=company_id)
+            form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
+                institute_units__institute_unit=institute_unit_id)
+        else:
+            form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
+                companytocompanycontactperson__company=obj.contract.company)
+            form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
+                institute_units__institute_unit=obj.contract.institute_unit)
+    return form
