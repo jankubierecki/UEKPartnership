@@ -3,6 +3,7 @@ import os
 import sys
 
 if __name__ == "__main__":
+    """ manage.py"""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "UEKpartnerships.settings")
     try:
         from django.core.management import execute_from_command_line

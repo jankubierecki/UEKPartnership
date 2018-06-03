@@ -14,3 +14,5 @@ python3 manage.py collectstatic --no-input
 python3 manage.py migrate
 pkill gunicorn
 gunicorn UEKpartnerships.wsgi --log-file /var/log/gunicorn/error_log --access-logformat /var/log/gunicorn/access_log --daemon -b 0.0.0.0:8000
+
+#runs server without envs 
