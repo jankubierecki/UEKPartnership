@@ -23,8 +23,8 @@ class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInli
 
 @admin.register(Company)
 class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    list_display = ["name", "city", "street", "zip_code", "phone", "industry", "krs_code", "website", "created_at",
-                    "updated_at"]
+    list_display = ["name", "city", "street", "zip_code", "phone", "industry", "krs_code", "get_website_url",
+                    "created_at", "updated_at"]
     search_fields = ["name", "city", "zip_code", "industry", "company_contact_persons__first_name",
                      "company_contact_persons__last_name"]
     list_filter = ["created_at", "updated_at"]
@@ -37,6 +37,11 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     )
     readonly_fields = ["created_at", "updated_at"]
     inlines = [CompanyToCompanyContactPersonInlineAdmin]
+
+    def get_website_url(self, obj: Company):
+        return format_html('<a href="%s">%s' % (obj.website, obj.website))
+
+    get_website_url.short_description = 'Strona Internetowa'
 
 
 @admin.register(CompanyContactPerson)
