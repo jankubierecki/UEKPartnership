@@ -1,3 +1,4 @@
+from .settings import *
 import os
 
 ALLOWED_HOSTS = ['kubierecki.pl', 'www.kubierecki.pl']
@@ -6,7 +7,6 @@ DEBUG = False
 
 ADMINS = (
     ('Jan Kubierecki', 'jankubierecki@gmail.com'),
-    ('Jan Kubierecki', 'admin@kubierecki.pl'),
 )
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -26,4 +26,4 @@ DATABASES = {
 EMAIL_HOST = 'ssl0.ovh.net'
 EMAIL_HOST_USER = 'admin@kubierecki.pl'
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
-SERVER_EMAIL = 'django@kubierecki.pl'
+
