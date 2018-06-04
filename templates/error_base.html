@@ -1,0 +1,9 @@
+{% load staticfiles %}
+{% block body_block %}
+    <div class="flex-center">
+        <div class="error">
+            <h3 class="text-center" style="font-size:50px;"><strong>{% block code %}{% endblock %}</strong></h3>
+            <h4 class="text-center">{% block msg %}Wystąpił nieznany błąd{% endblock %}</h4>
+        </div>
+    </div>
+{% endblock %}
