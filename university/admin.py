@@ -9,7 +9,7 @@ from university.views import UniversityContactPersonAutocomplete
 
 @admin.register(Institute)
 class InstituteAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    fields = ["name"]
+    fields = ["name", 'university_faculty']
     search_fields = ["name", "university_faculty__name"]
 
 
