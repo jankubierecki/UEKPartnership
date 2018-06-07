@@ -10,6 +10,12 @@
         $(source_id).on('select2:select', function (e) {
             source_val["currentValue"] = e.params.data['id'];
             $(target_id).val(null).trigger('change');
+            $(target_id).select2({
+                ajax: {
+                    delay: 200
+                }
+            });
+
         });
 
         $(target_id).select2('destroy');
