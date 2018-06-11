@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'authorization.apps.AuthorizationConfig',
     'django_admin_listfilter_dropdown',
     'admin_reorder',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +85,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'partnerships',
         'USER': 'postgres',
-        'PASSWORD': 'online13',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -168,3 +168,13 @@ ADMIN_REORDER = (
     'auth',
 
 )
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter', 'compressor.filters.cssmin.CSSMinFilter']

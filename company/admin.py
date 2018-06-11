@@ -9,6 +9,7 @@ from university.views import CompanyContactPersonAutocomplete
 class CompanyToCompanyContactPersonInlineAdmin(admin.TabularInline):
     model = CompanyToCompanyContactPerson
     extra = 0
+    min_num = 1
     verbose_name_plural = "Przypisane osoby do kontaktu"
     fields = ['company_contact_person', 'created_at']
     readonly_fields = ['created_at']
@@ -16,6 +17,8 @@ class CompanyToCompanyContactPersonInlineAdmin(admin.TabularInline):
 
 
 class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInlineAdmin):
+    extra = 0
+    min_num = 0
     fields = ['company', 'created_at']
     verbose_name_plural = "Przypisane Firmy"
     autocomplete_fields = ["company"]

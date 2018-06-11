@@ -1,10 +1,9 @@
 {% extends "admin/base.html" %}
-{% load staticfiles %}
+{% load staticfiles compress%}
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 {% block extrastyle %}
+    {% compress css %}gi
     {{ block.super }}
-    <script>
-    </script>
     <style>
         html, body, #container {
             min-height: 100%;
@@ -114,6 +113,7 @@
             padding: 20px 20px !important;
         }
     </style>
+    {% endcompress %}
 {% endblock %}
 {% block branding %}
 

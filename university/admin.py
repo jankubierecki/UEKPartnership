@@ -30,6 +30,7 @@ class UniversityFacultyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 class InstituteUnitToUniversityContactPersonInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
     model = InstituteUnitToUniversityContactPerson
     extra = 0
+    min_num = 1
     verbose_name_plural = "Przypisane osoby"
     fields = ['university_contact_person', 'created_at']
     readonly_fields = ['created_at']
@@ -37,6 +38,8 @@ class InstituteUnitToUniversityContactPersonInlineAdmin(ReadOnlyModelAdmin, admi
 
 
 class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversityContactPersonInlineAdmin):
+    extra = 0
+    min_num = 0
     fields = ['institute_unit', 'created_at']
     verbose_name_plural = "Przypisane jednostki współpracujące UEK"
 

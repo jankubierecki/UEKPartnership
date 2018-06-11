@@ -4,3 +4,5 @@ django-admin-view-permission==1.6
 gunicorn
 django-admin-list-filter-dropdown
 django-modeladmin-reorder
+django-compressor==2.2
+csscompressor==0.9.5
