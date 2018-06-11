@@ -28,9 +28,9 @@ class Contract(models.Model):
 
 class Partnership(models.Model):
     KINDS_OF_PARTNERSHIPS = (
-        ("financial", "Finansowa"),
-        ("non_financial", "Niefinansowa"),
-        ("barter", "Barterowa"),
+        ("financial", "Finansowa",),
+        ("non_financial", "Niefinansowa",),
+        ("barter", "Barterowa",),
         ("sponsored", "Sponsoring")
     )
 
@@ -61,7 +61,7 @@ class Partnership(models.Model):
                                            default=TYPES_OF_PARTNERSHIPS[1][0])
     kind_of_partnership = models.CharField("Rodzaj współpracy", max_length=255, choices=KINDS_OF_PARTNERSHIPS,
                                            default=KINDS_OF_PARTNERSHIPS[1][0])
-    status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP, default=[2][0])
+    status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP, default=STATUS_OF_PARTNERSHIP[2][0])
 
     def __str__(self):
         return "%s %s" % (self.contract.contract_number, self.contract.company.name)
