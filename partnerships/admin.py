@@ -43,6 +43,12 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
         ('status', ChoicesFieldListFilter),
 
     )
+    status_html = {
+        'finished': '<div style="width:100%%; height:100%%; color:grey;">%s</div>' % 'zakończona',
+        'paid_and_on': '<div style="width:100%%; height:100%%; color:green;">%s</div>' % 'opłacona - w trakcie',
+        'started_not_paid': '<div style="width:100%%; height:100%%; color:red;">%s</div>' % 'nieopłacona',
+        'other': '<div style="width:100%%; height:100%%; color:purple;">%s</div>' % 'inna',
+    }
 
     autocomplete_fields = ['university_contact_person', 'company_contact_person']
 
@@ -78,39 +84,23 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_company_contact_person_name_url.short_description = "Osoba do kontaktu Firmy"
 
     def get_status_with_color(self, obj: Partnership):
-        if obj.status == 'finished':
-            return mark_safe(
-                '<div style="width:100%%; height:100%%; color:grey;">%s</div>' % obj.status.replace(obj.status,
-                                                                                                    'Zakończona'))
-        if obj.status == 'paid_and_on':
-            return mark_safe(
-                '<div style="width:100%%; height:100%%; color:green;">%s</div>' % obj.status.replace(obj.status,
-                                                                                                     'Opłacona - w trakcie'))
-        if obj.status == 'started_not_paid':
-            return mark_safe(
-                '<div style="width:100%%; height:100%%; color:red;">%s</div>' % obj.status.replace(obj.status,
-                                                                                                   'Nieopłacona - w trakcie'))
-        if obj.status == 'other':
-            return mark_safe(
-                '<div style="width:100%%; height:100%%; color:black;">%s</div>' % obj.status.replace(obj.status,
-                                                                                                     'Inna'))
+        return mark_safe(self.status_html.get(obj.status))
 
     get_status_with_color.short_description = "Status"
 
-
-def get_form(self, request, obj=None, **kwargs):
-    form = super(PartnershipAdmin, self).get_form(request, obj, **kwargs)
-    if obj is not None and 'company_contact_person' in form.base_fields and 'university_contact_person' in form.base_fields:
-        if request.POST:
-            company_id = int(request.POST['contract-0-company'])
-            institute_unit_id = int(request.POST['contract-0-institute_unit'])
-            form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
-                companytocompanycontactperson__company_id=company_id)
-            form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
-                institute_units__institute_unit=institute_unit_id)
-        else:
-            form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
-                companytocompanycontactperson__company=obj.contract.company)
-            form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
-                institute_units__institute_unit=obj.contract.institute_unit)
-    return form
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(PartnershipAdmin, self).get_form(request, obj, **kwargs)
+        if obj is not None and 'company_contact_person' in form.base_fields and 'university_contact_person' in form.base_fields:
+            if request.POST:
+                company_id = int(request.POST['contract-0-company'])
+                institute_unit_id = int(request.POST['contract-0-institute_unit'])
+                form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
+                    companytocompanycontactperson__company_id=company_id)
+                form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
+                    institute_units__institute_unit=institute_unit_id)
+            else:
+                form.base_fields['company_contact_person'].queryset = CompanyContactPerson.objects.filter(
+                    companytocompanycontactperson__company=obj.contract.company)
+                form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
+                    institute_units__institute_unit=obj.contract.institute_unit)
+        return form
