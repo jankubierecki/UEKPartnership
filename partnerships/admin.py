@@ -44,10 +44,10 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     )
     status_html = {
-        'finished': '<div style="width:100%%; height:100%%; color:grey;">%s</div>' % 'zakończona',
-        'paid_and_on': '<div style="width:100%%; height:100%%; color:green;">%s</div>' % 'opłacona - w trakcie',
-        'started_not_paid': '<div style="width:100%%; height:100%%; color:red;">%s</div>' % 'nieopłacona',
-        'other': '<div style="width:100%%; height:100%%; color:purple;">%s</div>' % 'inna',
+        'finished': '<div style="width:100%%; height:100%%; color:grey;">%s</div>',
+        'paid_and_on': '<div style="width:100%%; height:100%%; color:green;">%s</div>',
+        'started_not_paid': '<div style="width:100%%; height:100%%; color:red;">%s</div>',
+        'other': '<div style="width:100%%; height:100%%; color:purple;">%s</div>',
     }
 
     autocomplete_fields = ['university_contact_person', 'company_contact_person']
@@ -84,7 +84,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_company_contact_person_name_url.short_description = "Osoba do kontaktu Firmy"
 
     def get_status_with_color(self, obj: Partnership):
-        return mark_safe(self.status_html.get(obj.status))
+        return mark_safe(self.status_html.get(obj.status) % obj.get_status_display())
 
     get_status_with_color.short_description = "Status"
 

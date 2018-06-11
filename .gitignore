@@ -3,3 +3,4 @@ venv/
 *.pyc
 static/
 media/
+$user=root

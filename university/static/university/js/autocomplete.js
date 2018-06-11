@@ -7,8 +7,17 @@
     let institute_unit_value;
 
     function update_select(source_id, target_id, source_val) {
+        if (source_val["currentValue"] == null) {
+            $(target_id).prop("disabled", true);
+        }
         $(source_id).on('select2:select', function (e) {
             source_val["currentValue"] = e.params.data['id'];
+            $(target_id).prop("disabled", false);
+            $(target_id).val(null).trigger('change');
+        });
+        $(source_id).on('change', function (e) {
+            source_val["currentValue"] = e.currentTarget.value;
+            $(target_id).prop("disabled", false);
             $(target_id).val(null).trigger('change');
         });
 
