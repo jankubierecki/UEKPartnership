@@ -8,16 +8,12 @@
                         term: params.term,
                         page: params.page
                     };
-                }
+                },
+                delay: 200
+
             }
         }, options);
         $element.select2(settings);
-
-        $element.select2({
-            ajax: {
-                delay: 200
-            }
-        });
     };
 
     $.fn.djangoAdminSelect2 = function (options) {
