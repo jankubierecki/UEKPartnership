@@ -1,3 +1,4 @@
+from .settings import *
 import os
 
 ALLOWED_HOSTS = ['kubierecki.pl', 'www.kubierecki.pl']
