@@ -26,7 +26,7 @@ class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInli
 
 @admin.register(Company)
 class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    list_display = ["name", "city", "street", "zip_code", "phone", "industry", "krs_code", "get_website_url",
+    list_display = ["name", "city", "street", "zip_code", "phone", "industry", "get_website_url",
                     "created_at", "updated_at"]
     search_fields = ["name", "city", "zip_code", "industry", "company_contact_persons__first_name",
                      "company_contact_persons__last_name"]
@@ -35,7 +35,7 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     fieldsets = (
         ("Informacje podstawowe", {'fields': ['name', 'phone', 'website']}),
         ("Dane do kontaktu", {'fields': [('city', 'street', 'zip_code')]}),
-        ("O Firmie", {'fields': ['industry', 'krs_code', 'created_at', 'updated_at']})
+        ("O Firmie", {'fields': ['industry', 'krs_code', 'nip_code', 'created_at', 'updated_at']})
 
     )
     readonly_fields = ["created_at", "updated_at"]

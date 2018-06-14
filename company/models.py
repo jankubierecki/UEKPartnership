@@ -17,6 +17,7 @@ class Company(models.Model):
     company_size = models.CharField("Wielkość firmy", max_length=64, blank=True)
     krs_code = models.CharField("Numer KRS", max_length=10, blank=False, null=False,
                                 validators=[validators.validate_krs])
+    nip_code = models.CharField("Numer NIP", max_length=10, default="numer nip", validators=[validators.validate_nip])
     company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson",
                                                      related_name="companies")
 
@@ -33,7 +34,7 @@ class CompanyContactPerson(models.Model):
     first_name = models.CharField("Imię", max_length=255)
     last_name = models.CharField("Nazwisko", max_length=255)
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
-    email = models.EmailField("Email", max_length=50, blank=True, null=True)
+    email = models.EmailField("Email", max_length=50, default=" ")
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
 
