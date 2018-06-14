@@ -46,10 +46,10 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
 
 @admin.register(InstituteUnit)
 class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    list_display = ["name", "get_institute_name", "created_at", "updated_at"]
+    list_display = ["name", "created_at", "updated_at"]
     search_fields = ["name", "institute__name"]
     list_filter = ["institute", "created_at", "updated_at"]
-    fields = ["name", "institute", "created_at", "updated_at"]
+    fields = ["name", "created_at", "updated_at"]
     readonly_fields = ["created_at", "updated_at"]
     filter_horizontal = ['university_contact_persons']
     inlines = [InstituteUnitToUniversityContactPersonInlineAdmin]

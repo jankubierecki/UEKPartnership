@@ -32,7 +32,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'get_company_name', 'get_company_contact_person_name_url', 'get_institute_unit_name',
                     'get_university_contact_person_name_url', 'contract_date', 'last_contact_date',
                     'get_status_with_color']
-    fields = ['name', 'contract_date', 'last_contact_date', 'university_contact_person', 'company_contact_person',
+    fields = ['name', 'contract_date', 'last_contact_date','company_contact_person', 'university_contact_person',
               'kind_of_partnership', 'type_of_partnership', 'status']
     list_filter = (
         ('contract_date', DateFieldListFilter),
@@ -78,7 +78,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     def get_company_contact_person_name_url(self, obj: Partnership):
         return mark_safe(
             '<a href="{}">{}</a>'.format(
-                reverse("admin:company_companycontactperson_change", args=(obj.company_contact_person,)),
+                reverse("admin:company_companycontactperson_change", args=(obj.company_contact_person.id,)),
                 obj.company_contact_person.email))
 
     get_company_contact_person_name_url.short_description = "Osoba do kontaktu Firmy"
