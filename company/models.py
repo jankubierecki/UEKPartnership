@@ -1,4 +1,7 @@
+from django.core.mail import send_mail
 from django.db import models
+from django.db.models import signals
+from django.template.loader import render_to_string
 
 from . import validators
 
@@ -7,6 +10,7 @@ class Company(models.Model):
     name = models.CharField("Nazwa", max_length=255)
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
+    email = models.CharField("Email do firmy", max_length=50, default=" ")
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
     website = models.URLField("Strona Internetowa")
     city = models.CharField("Miasto", max_length=64, blank=True)
@@ -17,7 +21,7 @@ class Company(models.Model):
     company_size = models.CharField("Wielkość firmy", max_length=64, blank=True)
     krs_code = models.CharField("Numer KRS", max_length=10, blank=False, null=False,
                                 validators=[validators.validate_krs])
-    nip_code = models.CharField("Numer NIP", max_length=10, default="numer nip", validators=[validators.validate_nip])
+    nip_code = models.CharField("Numer NIP", max_length=10, default=" ", validators=[validators.validate_nip])
     company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson",
                                                      related_name="companies")
 
@@ -63,3 +67,11 @@ class CompanyToCompanyContactPerson(models.Model):
         verbose_name = "Przypisana osoba"
         verbose_name_plural = "Przypisane osoby"
         ordering = ["-created_at"]
+
+
+def save_company(sender, instance, created, **kwargs):
+    message = render_to_string("message_to_company.txt", {'company': instance})
+    send_mail("Informacja o przetwarzaniu panstwa danych", message, 'admin@kubierecki.pl', [Company.email])
+
+
+signals.post_save.connect(receiver=save_company, sender=Company)

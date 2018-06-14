@@ -26,14 +26,14 @@ class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInli
 
 @admin.register(Company)
 class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    list_display = ["name", "city", "street", "zip_code", "phone", "industry", "get_website_url",
+    list_display = ["name", "city", "street", "zip_code", "phone", "email", "industry", "get_website_url",
                     "created_at", "updated_at"]
     search_fields = ["name", "city", "zip_code", "industry", "company_contact_persons__first_name",
                      "company_contact_persons__last_name"]
     list_filter = ["created_at", "updated_at"]
 
     fieldsets = (
-        ("Informacje podstawowe", {'fields': ['name', 'phone', 'website']}),
+        ("Informacje podstawowe", {'fields': ['name', 'phone', 'website', 'email']}),
         ("Dane do kontaktu", {'fields': [('city', 'street', 'zip_code')]}),
         ("O Firmie", {'fields': ['industry', 'krs_code', 'nip_code', 'created_at', 'updated_at']})
 
@@ -43,6 +43,9 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     def get_website_url(self, obj: Company):
         return format_html('<a href="%s">%s' % (obj.website, obj.website))
+
+    def get_email_url(self, obj: Company):
+        return format_html('<a href="%s">%s' % (obj.id, obj.email))
 
     get_website_url.short_description = 'Strona Internetowa'
 
