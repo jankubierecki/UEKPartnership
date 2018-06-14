@@ -1,7 +1,5 @@
-from django.core.mail import send_mail
 from django.db import models
-from django.db.models import signals
-from django.template.loader import render_to_string
+from company.signals import company_contact_person_email_changed, company_email_changed
 
 from . import validators
 
@@ -33,6 +31,15 @@ class Company(models.Model):
         verbose_name_plural = "Firmy"
         ordering = ["name"]
 
+    def email_has_changed(self):
+        return self.email != Company.objects.filter(id=self.id).values_list(['email'], flat=True)[0]
+
+    def save(self, *args, **kwargs):
+        should_notify = self.id is None or self.email_has_changed()
+        super(Company, self).save(*args, **kwargs)
+        if should_notify:
+            company_email_changed.send(sender=Company, company=self)
+
 
 class CompanyContactPerson(models.Model):
     first_name = models.CharField("Imię", max_length=255)
@@ -49,6 +56,15 @@ class CompanyContactPerson(models.Model):
         verbose_name = "Osoba do kontaktu Firmy współpracującej"
         verbose_name_plural = "Osoby do kontaktu Firmy współpracującej"
         ordering = ["last_name", "first_name"]
+
+    def email_has_changed(self):
+        return self.email != CompanyContactPerson.objects.filter(id=self.id).values_list('email', flat=True)[0]
+
+    def save(self, *args, **kwargs):
+        should_notify = self.id is None or self.email_has_changed()
+        super(CompanyContactPerson, self).save(*args, **kwargs)
+        if should_notify:
+            company_contact_person_email_changed.send(sender=CompanyContactPerson, company_contact_person=self)
 
 
 class CompanyToCompanyContactPerson(models.Model):
@@ -67,11 +83,3 @@ class CompanyToCompanyContactPerson(models.Model):
         verbose_name = "Przypisana osoba"
         verbose_name_plural = "Przypisane osoby"
         ordering = ["-created_at"]
-
-
-def save_company(sender, instance, created, **kwargs):
-    message = render_to_string("message_to_company.txt", {'company': instance})
-    send_mail("Informacja o przetwarzaniu panstwa danych", message, 'admin@kubierecki.pl', [Company.email])
-
-
-signals.post_save.connect(receiver=save_company, sender=Company)

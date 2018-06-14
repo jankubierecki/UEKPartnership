@@ -121,6 +121,10 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
+        'console_info': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler'
@@ -130,6 +134,10 @@ LOGGING = {
         'django.db.backends': {
             'level': 'DEBUG',
             'handlers': ['console'],
+        },
+        'company': {
+            'handlers': ['console_info'],
+            'level': 'INFO',
         }
     },
     'django.request': {

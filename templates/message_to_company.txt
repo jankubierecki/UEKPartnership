@@ -1,2 +1,2 @@
-Dzien dobry {{ company.name }},
+Dzien dobry {{ email }},
 pozdrawiamy!
