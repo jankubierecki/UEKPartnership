@@ -10,6 +10,9 @@ class InstituteUnit(models.Model):
     university_contact_persons = models.ManyToManyField("UniversityContactPerson",
                                                         through="InstituteUnitToUniversityContactPerson")
 
+    def __str__(self):
+        return "%s" % self.name
+
     class Meta:
         verbose_name = "Jednostka Współpracująca UEK"
         verbose_name_plural = "Jednostki Współpracujące UEK"

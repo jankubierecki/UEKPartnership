@@ -1,9 +1,11 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 from company.models import Company, CompanyContactPerson
 from university.models import InstituteUnit, UniversityContactPerson
 
 
+# todo add authors
 class Contract(models.Model):
     contract_date = models.DateField("Data zawiązania umowy")
     amount = models.FloatField("Kwota w złotówkach", null=True, blank=True)
@@ -61,7 +63,8 @@ class Partnership(models.Model):
                                            default=TYPES_OF_PARTNERSHIPS[1][0])
     kind_of_partnership = models.CharField("Rodzaj współpracy", max_length=255, choices=KINDS_OF_PARTNERSHIPS,
                                            default=KINDS_OF_PARTNERSHIPS[1][0])
-    status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP, default=STATUS_OF_PARTNERSHIP[2][0])
+    status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP,
+                              default=STATUS_OF_PARTNERSHIP[2][0])
 
     def __str__(self):
         return "%s %s" % (self.contract.contract_number, self.contract.company.name)
@@ -70,3 +73,24 @@ class Partnership(models.Model):
         verbose_name = "Współpraca"
         verbose_name_plural = "Współprace"
         ordering = ["-contract_date"]
+
+
+class PartnershipLogEntry(models.Model):
+    created_at = models.DateTimeField("Utworzono", auto_now_add=True)
+    updated_at = models.DateTimeField("Zaktualizwoano", auto_now=True)
+    description = models.TextField("Opis")
+    created_by = models.ForeignKey(User, verbose_name="Utworzono przez", related_name="created_log_entries",
+                                   on_delete=models.SET_NULL, null=True)
+    updated_by = models.ForeignKey(User, verbose_name="Zaktualizowano przez", related_name="updated_log_entries",
+                                   on_delete=models.SET_NULL, null=True)
+    partnership = models.ForeignKey(Partnership, on_delete=models.SET_NULL,
+                                    null=True,
+                                    related_name="log_entries", verbose_name="Wspolprace")
+
+    def __str__(self):
+        return "%s, %s" % (self.created_at, self.created_by)
+
+    class Meta:
+        verbose_name = "Notatka"
+        verbose_name_plural = "Notatki"
+        ordering = ["updated_by"]

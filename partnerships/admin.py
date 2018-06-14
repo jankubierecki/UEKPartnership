@@ -6,8 +6,16 @@ from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from common.admin import ReadOnlyModelAdmin
 from company.models import CompanyContactPerson
-from partnerships.models import Partnership, Contract
+from partnerships.models import Partnership, Contract, PartnershipLogEntry
 from university.models import UniversityContactPerson
+
+
+class PartnershipLogEntryInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
+    model = PartnershipLogEntry
+    extra = 1
+    can_delete = True
+    fields = ['description', 'created_at', 'updated_at', 'created_by', 'updated_by']
+    readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
 
 
 class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
@@ -23,6 +31,7 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
 
 @admin.register(Partnership)
 class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
+    # todo add log entry to this inline - now i will crush, because user is obligatory
     inlines = [ContractInlineAdmin]
     change_form_template = "admin/partnership_change_form.html"
     change_list_template = "admin/partnership_change_list.html"
@@ -32,7 +41,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'get_company_name', 'get_company_contact_person_name_url', 'get_institute_unit_name',
                     'get_university_contact_person_name_url', 'contract_date', 'last_contact_date',
                     'get_status_with_color']
-    fields = ['name', 'contract_date', 'last_contact_date','company_contact_person', 'university_contact_person',
+    fields = ['name', 'contract_date', 'last_contact_date', 'company_contact_person', 'university_contact_person',
               'kind_of_partnership', 'type_of_partnership', 'status']
     list_filter = (
         ('contract_date', DateFieldListFilter),
@@ -51,6 +60,8 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     }
 
     autocomplete_fields = ['university_contact_person', 'company_contact_person']
+
+    # todo validate if  is null
 
     def get_company_name(self, obj: Partnership):
         return mark_safe(

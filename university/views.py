@@ -16,7 +16,7 @@ class UniversityContactPersonAutocomplete(BaseAutocomplete):
         queryset = super(UniversityContactPersonAutocomplete, self).get_queryset()
         if self.parent_id is not None:
             return queryset.filter(
-                institute_units__institute_unit_id=self.parent_id
+                instituteunit=self.parent_id
             )
         return queryset
 
@@ -27,6 +27,6 @@ class CompanyContactPersonAutocomplete(BaseAutocomplete):
         queryset = super(CompanyContactPersonAutocomplete, self).get_queryset()
         if self.parent_id is not None:
             return queryset.filter(
-                companytocompanycontactperson=self.parent_id
+                companies=self.parent_id
             )
         return queryset
