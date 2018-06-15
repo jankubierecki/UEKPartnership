@@ -66,9 +66,9 @@
                     {{ adminform.form.non_field_errors }}
                 {% endif %}
                 {% block inline_field_sets %}
-                    {% for inline_admin_formset in inline_admin_formsets %}
+                    {% with inline_admin_formsets.0 as  inline_admin_formset %}
                         {% include inline_admin_formset.opts.template %}
-                    {% endfor %}
+                    {% endwith %}
                 {% endblock %}
                 <h2>Współpraca</h2>
 
@@ -77,6 +77,9 @@
                         {% include "admin/includes/fieldset.html" %}
                     {% endfor %}
                 {% endblock %}
+                 {% with inline_admin_formsets.1 as  inline_admin_formset %}
+                        {% include inline_admin_formset.opts.template %}
+                    {% endwith %}
 
                 {% block after_field_sets %}{% endblock %}
 

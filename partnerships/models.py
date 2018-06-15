@@ -51,10 +51,11 @@ class Partnership(models.Model):
     )
 
     company_contact_person = models.ForeignKey(CompanyContactPerson, on_delete=models.SET_NULL,
-                                               null=True,
+                                               null=True, help_text="Osoby związane tylko z wybraną wcześniej firmą",
                                                related_name="partnerships", verbose_name="Osoby Do kontaktu Firmy")
     university_contact_person = models.ForeignKey(UniversityContactPerson, on_delete=models.SET_NULL,
                                                   null=True,
+                                                  help_text="Osoby związane tylko z wybraną wcześniej jednostką UEK",
                                                   related_name="partnerships", verbose_name="Osoby Do kontaktu UEK")
     contract_date = models.DateField("Data rozpoczęcia współpracy")
     last_contact_date = models.DateField("Rok ostatniego kontaktu")

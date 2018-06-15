@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.contrib.admin import DateFieldListFilter, ChoicesFieldListFilter
+from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
+from django.db import models
 
 from common.admin import ReadOnlyModelAdmin
 from company.models import CompanyContactPerson
@@ -16,6 +18,9 @@ class PartnershipLogEntryInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
     can_delete = True
     fields = ['description', 'created_at', 'updated_at', 'created_by', 'updated_by']
     readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
+    formfield_overrides = {
+        models.TextField : {'widget': Textarea(attrs={'rows':'3', 'cols': 60})},
+    }
 
 
 class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
