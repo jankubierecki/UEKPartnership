@@ -35,10 +35,10 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     fieldsets = (
         ("Informacje podstawowe", {'fields': ['name', 'phone', 'website', 'email']}),
         ("Dane do kontaktu", {'fields': [('city', 'street', 'zip_code')]}),
-        ("O Firmie", {'fields': ['industry', 'krs_code', 'nip_code', 'created_at', 'updated_at']})
+        ("O Firmie", {'fields': ['industry', 'krs_code', 'nip_code', 'created_at', 'updated_at', 'privacy_email_date_send']})
 
     )
-    readonly_fields = ["created_at", "updated_at"]
+    readonly_fields = ["created_at", "updated_at", 'privacy_email_date_send']
     inlines = [CompanyToCompanyContactPersonInlineAdmin]
 
     def get_website_url(self, obj: Company):
@@ -53,9 +53,9 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 @admin.register(CompanyContactPerson)
 class CompanyContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = ["first_name", "get_last_name_url", "phone", "get_email_url"]
-    fields = ["first_name", "last_name", "phone", "email", "created_at", "updated_at"]
+    fields = ["first_name", "last_name", "phone", "email", "created_at", "updated_at", 'privacy_email_date_send']
     list_filter = ["created_at", "updated_at"]
-    readonly_fields = ["created_at", "updated_at"]
+    readonly_fields = ["created_at", "updated_at", 'privacy_email_date_send']
     search_fields = ["first_name", "last_name", "phone", "companies__name"]
     inlines = [CompanyContactPersonToCompanyInlineAdmin]
 
