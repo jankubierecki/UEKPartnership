@@ -75,7 +75,7 @@ class CompanyContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
 
 @admin.register(EmailInformedUsers)
-class EmailInformedUsersAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
+class EmailInformedUsersAdmin(admin.ModelAdmin):
     list_display = ["email", "created_at"]
     list_filter = list_display
     readonly_fields = list_display
