@@ -32,7 +32,7 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
 @admin.register(Partnership)
 class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     # todo add log entry to this inline - now i will crush, because user is obligatory
-    inlines = [ContractInlineAdmin]
+    inlines = [ContractInlineAdmin, PartnershipLogEntryInlineAdmin]
     change_form_template = "admin/partnership_change_form.html"
     change_list_template = "admin/partnership_change_list.html"
     search_fields = ['contract_date', 'last_contact_date', 'university_contact_person__first_name',
@@ -62,6 +62,23 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     autocomplete_fields = ['university_contact_person', 'company_contact_person']
 
     # todo validate if  is null
+    # todo validae example@uek.krakow - placeholder and exclude this from possible email choices
+    #todo display name and surname, not login
+
+    def save_formset(self, request, form, formset, change):
+        if formset.model == PartnershipLogEntry:
+            entries = formset.save(commit=False)
+            for log in entries:
+                if log.id is None:
+                    log.created_by = request.user
+                    log.updated_by = request.user
+                else:
+                    log.updated_by = request.user
+                log.save()
+            formset.save_m2m()
+
+        else:
+            super(PartnershipAdmin, self).save_formset(request, form, formset, change)
 
     def get_company_name(self, obj: Partnership):
         return mark_safe(
