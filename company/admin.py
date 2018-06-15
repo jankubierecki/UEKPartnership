@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from common.admin import ReadOnlyModelAdmin
-from company.models import CompanyToCompanyContactPerson, Company, CompanyContactPerson
+from company.models import CompanyToCompanyContactPerson, Company, CompanyContactPerson, EmailInformedUsers
 from university.views import CompanyContactPersonAutocomplete
 
 
@@ -35,7 +35,8 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     fieldsets = (
         ("Informacje podstawowe", {'fields': ['name', 'phone', 'website', 'email']}),
         ("Dane do kontaktu", {'fields': [('city', 'street', 'zip_code')]}),
-        ("O Firmie", {'fields': ['industry', 'krs_code', 'nip_code', 'created_at', 'updated_at', 'privacy_email_date_send']})
+        ("O Firmie",
+         {'fields': ['industry', 'krs_code', 'nip_code', 'created_at', 'updated_at', 'privacy_email_date_send']})
 
     )
     readonly_fields = ["created_at", "updated_at", 'privacy_email_date_send']
@@ -71,3 +72,20 @@ class CompanyContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_email_url.allow_tags = True
     get_email_url.short_description = 'Email'
     get_last_name_url.short_description = 'Nazwisko'
+
+
+@admin.register(EmailInformedUsers)
+class EmailInformedUsersAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
+    list_display = ["email", "created_at"]
+    list_filter = list_display
+    readonly_fields = list_display
+    search_fields = list_display
+
+    def has_add_permission(self, request):
+        return request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
