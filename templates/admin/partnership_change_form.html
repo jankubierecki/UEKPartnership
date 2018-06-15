@@ -4,8 +4,12 @@
 {% block extrahead %}{{ block.super }}
      <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
     {{ media }}
+    <script type="application/javascript">PARTNERSHIP_ID='{{ adminform.form.instance.id }}'</script>
     {% compress js  %}
-    <script type="text/javascript" src="{% static "university/js/autocomplete.js" %}"></script>
+        <script type="text/javascript" src="{% static "university/js/bind_with_delay.js" %}"></script>
+        <script type="text/javascript" src="{% static "university/js/autocomplete.js" %}"></script>
+        <script type="text/javascript" src="{% static "university/js/partnership_autocomplete.js" %}"></script>
+
     {% endcompress %}
 {% endblock %}
 

@@ -15,7 +15,7 @@ from university.models import UniversityContactPerson
 class PartnershipLogEntryInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
     model = PartnershipLogEntry
     extra = 1
-    can_delete = True
+    can_delete = False
     fields = ['description', 'created_at', 'updated_at', 'created_by', 'updated_by']
     readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
     formfield_overrides = {
@@ -28,7 +28,7 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
     extra = 1
     max_num = 1
     min_num = 1
-    can_delete = True
+    can_delete = False
     fields = ['partnership', 'company', 'institute_unit', 'contract_date', 'contract_number', 'amount',
               'additional_info']
     autocomplete_fields = ["institute_unit", "company"]

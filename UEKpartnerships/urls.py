@@ -18,8 +18,10 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path
 
 from partnerships.views import ErrorEmailTest
+from university.views import PartnershipAutocomplete
 
 urlpatterns = [
+    path('partnership_autocomplete/', login_required(PartnershipAutocomplete.as_view())),
     path('', admin.site.urls),
     path('test500/', login_required(ErrorEmailTest.as_view()))
 
