@@ -22,7 +22,7 @@ class Company(models.Model):
     nip_code = models.CharField("Numer NIP", max_length=10, default=" ", validators=[validators.validate_nip])
     company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson",
                                                      related_name="companies")
-    privacy_email_date_send = models.DateTimeField("Data powiadomienia o przetwarzaniu danych osobowych", null=True,
+    privacy_email_date_send = models.DateTimeField("Data powiadomienia o przetwarzaniu danych", null=True,
                                                    blank=True)
 
     def __str__(self):
@@ -50,7 +50,7 @@ class CompanyContactPerson(models.Model):
     email = models.EmailField("Email", max_length=50, default=" ")
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
-    privacy_email_date_send = models.DateTimeField("Data powiadomienia o przetwarzaniu danych osobowych", null=True,
+    privacy_email_date_send = models.DateTimeField("Data powiadomienia o przetwarzaniu danych", null=True,
                                                    blank=True)
 
     def __str__(self):
@@ -87,3 +87,16 @@ class CompanyToCompanyContactPerson(models.Model):
         verbose_name = "Przypisana osoba"
         verbose_name_plural = "Przypisane osoby"
         ordering = ["-created_at"]
+
+
+class EmailInformedUsers(models.Model):
+    email = models.EmailField("Email", max_length=255, unique=True)
+    created_at = models.DateTimeField("Wysłano maila")
+
+    def __str__(self):
+        return "powiadomiono %s w dniu %s" % (self.email, self.created_at)
+
+    class Meta:
+        verbose_name = "Powiadomiona osoba"
+        verbose_name_plural = "Powiadomione osoby"
+        ordering = ["email"]
