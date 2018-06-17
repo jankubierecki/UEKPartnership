@@ -43,7 +43,7 @@
         company_value = {currentValue: $(company_id).val()};
         institute_unit_value = {currentValue: $(institute_unit_id).val()};
 
-
+        //update fields
         update_select(company_id, company_contact_person_id, company_value);
         update_select(institute_unit_id, university_contact_person_id, institute_unit_value);
     })
