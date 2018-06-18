@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django import forms
 
 from common.admin import ReadOnlyModelAdmin
 from university.models import InstituteUnit, UniversityContactPerson, \

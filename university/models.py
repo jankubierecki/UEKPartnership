@@ -23,7 +23,7 @@ class UniversityContactPerson(models.Model):
     first_name = models.CharField("Imię", max_length=255)
     last_name = models.CharField("Nazwisko", max_length=255)
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
-    email = models.EmailField("Email", max_length=50, default="example@uek.krakow.pl",
+    email = models.EmailField("Email", max_length=50,
                               validators=[validators.email_validation], help_text="Tylko z domeną UEK")
     academic_title = models.CharField("Tytuł naukowy", max_length=50, blank=True, null=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)

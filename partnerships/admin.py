@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.admin import DateFieldListFilter, ChoicesFieldListFilter
-from django.contrib.auth.models import User
 from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -64,8 +63,6 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     }
 
     autocomplete_fields = ['university_contact_person', 'company_contact_person']
-
-    # todo validae example@uek.krakow - placeholder and exclude this from possible email choices
 
     def save_formset(self, request, form, formset, change):
         if formset.model == PartnershipLogEntry:
