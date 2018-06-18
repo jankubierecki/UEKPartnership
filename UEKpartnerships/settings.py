@@ -188,3 +188,4 @@ STATICFILES_FINDERS = (
 COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter', 'compressor.filters.cssmin.CSSMinFilter']
 
 LOGIN_URL = '/login/'
+

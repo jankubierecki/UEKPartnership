@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import DateFieldListFilter, ChoicesFieldListFilter
+from django.contrib.auth.models import User
 from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -19,7 +20,7 @@ class PartnershipLogEntryInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
     fields = ['description', 'created_at', 'updated_at', 'created_by', 'updated_by']
     readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
     formfield_overrides = {
-        models.TextField : {'widget': Textarea(attrs={'rows':'3', 'cols': 60})},
+        models.TextField: {'widget': Textarea(attrs={'rows': '3', 'cols': 60})},
     }
 
 
@@ -36,7 +37,6 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
 
 @admin.register(Partnership)
 class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    # todo add log entry to this inline - now i will crush, because user is obligatory
     inlines = [ContractInlineAdmin, PartnershipLogEntryInlineAdmin]
     change_form_template = "admin/partnership_change_form.html"
     change_list_template = "admin/partnership_change_list.html"
@@ -45,7 +45,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
                      'company_contact_person__last_name', 'contract__company__name', ]
     list_display = ['name', 'get_company_name', 'get_company_contact_person_name_url', 'get_institute_unit_name',
                     'get_university_contact_person_name_url', 'contract_date', 'last_contact_date',
-                    'get_status_with_color']
+                    'get_status_with_color', 'get_author_name']
     fields = ['name', 'contract_date', 'last_contact_date', 'company_contact_person', 'university_contact_person',
               'kind_of_partnership', 'type_of_partnership', 'status']
     list_filter = (
@@ -55,7 +55,6 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
         ('type_of_partnership', ChoicesFieldListFilter),
         ('kind_of_partnership', ChoicesFieldListFilter),
         ('status', ChoicesFieldListFilter),
-
     )
     status_html = {
         'finished': '<div style="width:100%%; height:100%%; color:grey;">%s</div>',
@@ -68,7 +67,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     # todo validate if  is null
     # todo validae example@uek.krakow - placeholder and exclude this from possible email choices
-    #todo display name and surname, not login
+    # todo display name and surname, not login
 
     def save_formset(self, request, form, formset, change):
         if formset.model == PartnershipLogEntry:
@@ -84,6 +83,18 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
         else:
             super(PartnershipAdmin, self).save_formset(request, form, formset, change)
+
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'author', None) is None:
+            obj.author = request.user
+        obj.save()
+
+    def get_author_name(self, obj: Partnership):
+        credentials = User.objects.distinct().filter(id=obj.author.id).values('first_name',
+                                                                              'last_name').get()
+        return ' '.join(credentials.values())
+
+    get_author_name.short_description = "Autor"
 
     def get_company_name(self, obj: Partnership):
         return mark_safe(

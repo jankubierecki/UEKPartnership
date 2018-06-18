@@ -59,13 +59,15 @@ class Partnership(models.Model):
                                                   related_name="partnerships", verbose_name="Osoby Do kontaktu UEK")
     contract_date = models.DateField("Data rozpoczęcia współpracy")
     last_contact_date = models.DateField("Rok ostatniego kontaktu")
-    name = models.CharField("Nazwa współpracy", max_length=255, default="bla")
+    name = models.CharField("Nazwa współpracy", max_length=255, default=" ")
     type_of_partnership = models.CharField("Typ współpracy", max_length=255, choices=TYPES_OF_PARTNERSHIPS,
                                            default=TYPES_OF_PARTNERSHIPS[1][0])
     kind_of_partnership = models.CharField("Rodzaj współpracy", max_length=255, choices=KINDS_OF_PARTNERSHIPS,
                                            default=KINDS_OF_PARTNERSHIPS[1][0])
     status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP,
                               default=STATUS_OF_PARTNERSHIP[2][0])
+    author = models.ForeignKey(User, verbose_name="Autor",
+                               related_name="partnerships", blank=True, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return "%s %s" % (self.contract.contract_number, self.contract.company.name)
