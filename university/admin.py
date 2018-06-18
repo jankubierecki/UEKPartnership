@@ -28,7 +28,7 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
 @admin.register(InstituteUnit)
 class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = ["name", "created_at", "updated_at"]
-    search_fields = ["name", "institute__name"]
+    search_fields = ["name"]
     list_filter = ["created_at", "updated_at"]
     fields = ["name", "created_at", "updated_at"]
     readonly_fields = ["created_at", "updated_at"]
@@ -53,3 +53,5 @@ class UniversityContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     get_email_url.allow_tags = True
     get_email_url.short_description = 'Email'
+
+#todo mail
