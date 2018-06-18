@@ -29,5 +29,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'ssl0.ovh.net'
 EMAIL_HOST_USER = 'admin@kubierecki.pl'
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+SERVER_EMAIL = "admin@kubierecki.pl"
 DEFAULT_FROM_EMAIL = 'admin@kubierecki.pl'
 EMAIL_PORT = 587
