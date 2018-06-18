@@ -62,7 +62,6 @@ class BasicUserAdmin(UserAdmin):
         obj.is_staff = True
         with transaction.atomic():
             super(BasicUserAdmin, self).save_model(request, obj, form, change)
-            print(obj.id, "*")
             group, _ = Group.objects.get_or_create(
                 name="Przeglądający"
             )

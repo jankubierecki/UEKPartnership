@@ -65,9 +65,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     autocomplete_fields = ['university_contact_person', 'company_contact_person']
 
-    # todo validate if  is null
     # todo validae example@uek.krakow - placeholder and exclude this from possible email choices
-    # todo display name and surname, not login
 
     def save_formset(self, request, form, formset, change):
         if formset.model == PartnershipLogEntry:
@@ -85,18 +83,20 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
             super(PartnershipAdmin, self).save_formset(request, form, formset, change)
 
     def save_model(self, request, obj, form, change):
-        if getattr(obj, 'author', None) is None:
+        if obj.id is None:
             obj.author = request.user
         obj.save()
 
     def get_author_name(self, obj: Partnership):
-        credentials = User.objects.distinct().filter(id=obj.author.id).values('first_name',
-                                                                              'last_name').get()
-        return ' '.join(credentials.values())
+        if obj.author is None:
+            return " "
+        return "%s %s" % (obj.author.first_name, obj.author.last_name)
 
     get_author_name.short_description = "Autor"
 
     def get_company_name(self, obj: Partnership):
+        if obj.contract.company is None:
+            return " "
         return mark_safe(
             '<a href="{}">{}</a>'.format(reverse("admin:company_company_change", args=(obj.contract.company.pk,)),
                                          obj.contract.company.name))
@@ -104,6 +104,8 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_company_name.short_description = "Firma współpracująca"
 
     def get_institute_unit_name(self, obj: Partnership):
+        if obj.contract.institute_unit is None:
+            return " "
         return mark_safe(
             '<a href="{}">{}</a>'.format(
                 reverse("admin:university_instituteunit_change", args=(obj.contract.institute_unit.pk,)),
@@ -112,6 +114,8 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_institute_unit_name.short_description = "Nazwa jednostki UEK"
 
     def get_university_contact_person_name_url(self, obj: Partnership):
+        if obj.university_contact_person is None:
+            return " "
         return mark_safe(
             '<a href="{}">{}</a>'.format(
                 reverse("admin:university_universitycontactperson_change", args=(obj.university_contact_person.id,)),
@@ -120,6 +124,8 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_university_contact_person_name_url.short_description = "Osoba do kontaktu UEK"
 
     def get_company_contact_person_name_url(self, obj: Partnership):
+        if obj.company_contact_person is None:
+            return " "
         return mark_safe(
             '<a href="{}">{}</a>'.format(
                 reverse("admin:company_companycontactperson_change", args=(obj.company_contact_person.id,)),
@@ -128,6 +134,8 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_company_contact_person_name_url.short_description = "Osoba do kontaktu Firmy"
 
     def get_status_with_color(self, obj: Partnership):
+        if obj.status is None:
+            return "Nieznana"
         return mark_safe(self.status_html.get(obj.status) % obj.get_status_display())
 
     get_status_with_color.short_description = "Status"

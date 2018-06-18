@@ -5,7 +5,6 @@ from company.models import Company, CompanyContactPerson
 from university.models import InstituteUnit, UniversityContactPerson
 
 
-# todo add authors
 class Contract(models.Model):
     contract_date = models.DateField("Data zawiązania umowy")
     amount = models.FloatField("Kwota w złotówkach", null=True, blank=True)
@@ -67,7 +66,7 @@ class Partnership(models.Model):
     status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP,
                               default=STATUS_OF_PARTNERSHIP[2][0])
     author = models.ForeignKey(User, verbose_name="Autor",
-                               related_name="partnerships", blank=True, on_delete=models.SET_NULL, null=True)
+                               related_name="partnerships", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return "%s %s" % (self.contract.contract_number, self.contract.company.name)
