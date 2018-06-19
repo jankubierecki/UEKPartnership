@@ -26,6 +26,7 @@ class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInli
 
 @admin.register(Company)
 class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
+    change_list_template = "admin/company_change_list.html"
     list_display = ["name", "city", "street", "zip_code", "phone", "email", "industry", "get_website_url",
                     "created_at", "updated_at"]
     search_fields = ["name", "city", "zip_code", "industry", "company_contact_persons__first_name",
@@ -42,6 +43,11 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     readonly_fields = ["created_at", "updated_at", 'privacy_email_date_send']
     inlines = [CompanyToCompanyContactPersonInlineAdmin]
 
+    class Media:
+        css = {
+            'all': ('university/css/company_display.css',)
+        }
+
     def get_website_url(self, obj: Company):
         return format_html('<a href="%s">%s' % (obj.website, obj.website))
 
@@ -49,6 +55,9 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
         return format_html('<a href="%s">%s' % (obj.id, obj.email))
 
     get_website_url.short_description = 'Strona Internetowa'
+
+    def get_queryset(self, request):
+        return Company.objects.prefetch_related("contracts", "contracts__institute_unit", "contracts__partnership").all()
 
 
 @admin.register(CompanyContactPerson)

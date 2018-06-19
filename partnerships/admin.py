@@ -38,7 +38,6 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
 class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     inlines = [ContractInlineAdmin, PartnershipLogEntryInlineAdmin]
     change_form_template = "admin/partnership_change_form.html"
-    change_list_template = "admin/partnership_change_list.html"
     search_fields = ['contract_date', 'last_contact_date', 'university_contact_person__first_name',
                      'university_contact_person__last_name', 'company_contact_person__first_name',
                      'company_contact_person__last_name', 'contract__company__name', ]
@@ -47,20 +46,23 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
                     'get_status_with_color', 'get_author_name']
     fields = ['name', 'contract_date', 'last_contact_date', 'company_contact_person', 'university_contact_person',
               'kind_of_partnership', 'type_of_partnership', 'status']
-    list_filter = (
-        ('contract_date', DateFieldListFilter),
-        ('university_contact_person', RelatedDropdownFilter),
-        ('company_contact_person', RelatedDropdownFilter),
-        ('type_of_partnership', ChoicesFieldListFilter),
-        ('kind_of_partnership', ChoicesFieldListFilter),
-        ('status', ChoicesFieldListFilter),
-    )
+
     status_html = {
         'finished': '<div style="width:100%%; height:100%%; color:grey;">%s</div>',
         'paid_and_on': '<div style="width:100%%; height:100%%; color:green;">%s</div>',
         'started_not_paid': '<div style="width:100%%; height:100%%; color:red;">%s</div>',
         'other': '<div style="width:100%%; height:100%%; color:purple;">%s</div>',
     }
+
+    list_filter = (
+        ('contract_date', DateFieldListFilter),
+        ('university_contact_person', RelatedDropdownFilter),
+        ('company_contact_person', RelatedDropdownFilter),
+        ('contract__company', RelatedDropdownFilter),
+        ('type_of_partnership', ChoicesFieldListFilter),
+        ('kind_of_partnership', ChoicesFieldListFilter),
+        ('status', ChoicesFieldListFilter),
+    )
 
     autocomplete_fields = ['university_contact_person', 'company_contact_person']
 
@@ -153,3 +155,8 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
                 form.base_fields['university_contact_person'].queryset = UniversityContactPerson.objects.filter(
                     institute_units__institute_unit=obj.contract.institute_unit)
         return form
+
+    def get_queryset(self, request):
+        return Partnership.objects.prefetch_related("contract__company__company_contact_persons",
+                                                    "contract__institute_unit__university_contact_persons").select_related(
+            "contract", "contract__company", "contract__institute_unit").all()

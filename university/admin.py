@@ -53,5 +53,3 @@ class UniversityContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     get_email_url.allow_tags = True
     get_email_url.short_description = 'Email'
-
-#todo mail
