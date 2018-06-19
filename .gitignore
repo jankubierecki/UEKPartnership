@@ -1,6 +1,6 @@
 venv/
 .idea/
 *.pyc
-static/
-media/
+/static
+/media
 $user=root

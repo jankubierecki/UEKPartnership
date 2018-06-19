@@ -1,0 +1,17 @@
+.inner-table {
+    opacity: 0.6;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+
+}
+
+.inner-table th {
+    background:white !important;
+}
+
+.inner-table:hover {
+    opacity: 1;
+}
+
+/*sadsadsad/*
