@@ -12,7 +12,7 @@ class Contract(models.Model):
     additional_info = models.TextField("Dodatkowe Informacje", null=True, blank=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="contracts",
                                 verbose_name="Firmy")
-    partnership = models.OneToOneField("Partnership", on_delete=models.SET_NULL, null=True, related_name="contract",
+    partnership = models.OneToOneField("Partnership", on_delete=models.CASCADE, null=True, related_name="contract",
                                        verbose_name="Współprace")
     institute_unit = models.ForeignKey(InstituteUnit, on_delete=models.SET_NULL, null=True,
                                        related_name="contracts",
