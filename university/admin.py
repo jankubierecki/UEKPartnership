@@ -27,6 +27,7 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
 
 @admin.register(InstituteUnit)
 class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
+    change_list_template = "admin/institute_unit_change_list.html"
     list_display = ["name", "created_at", "updated_at"]
     search_fields = ["name"]
     list_filter = ["created_at", "updated_at"]
@@ -34,6 +35,14 @@ class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     readonly_fields = ["created_at", "updated_at"]
     filter_horizontal = ['university_contact_persons']
     inlines = [InstituteUnitToUniversityContactPersonInlineAdmin]
+
+    class Media:
+        css = {
+            'all': ('university/css/institute_unit_display.css',)
+        }
+
+    def get_queryset(self, request):
+        return InstituteUnit.objects.prefetch_related("contracts", "contracts__company", "contracts__partnership").all()
 
 
 @admin.register(UniversityContactPerson)
