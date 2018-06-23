@@ -40,7 +40,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     change_form_template = "admin/partnership_change_form.html"
     search_fields = ['contract_date', 'last_contact_date', 'university_contact_person__first_name',
                      'university_contact_person__last_name', 'company_contact_person__first_name',
-                     'company_contact_person__last_name', 'contract__company__name', ]
+                     'company_contact_person__last_name', 'contract__company__name', 'name' ]
     list_display = ['name', 'get_company_name', 'get_company_contact_person_name_url', 'get_institute_unit_name',
                     'get_university_contact_person_name_url', 'contract_date', 'last_contact_date',
                     'get_status_with_color', 'get_author_name']
