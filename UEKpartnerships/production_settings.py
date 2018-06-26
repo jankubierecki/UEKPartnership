@@ -1,7 +1,7 @@
 from .settings import *
 import os
 
-ALLOWED_HOSTS = ['kubierecki.pl', 'www.kubierecki.pl']
+ALLOWED_HOSTS = [os.environ['DOMAIN'], 'www.' + os.environ['DOMAIN']]
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 
@@ -19,16 +19,17 @@ CSRF_COOKIE_SECURE = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'partnerships',
-        'USER': 'root',
-        'PASSWORD': os.environ['DB_PASSWORD'],
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'postgres',
+        'PASSWORD': 'postgres'
     }
 }
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'ssl0.ovh.net'
-EMAIL_HOST_USER = 'admin@kubierecki.pl'
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
-SERVER_EMAIL = "admin@kubierecki.pl"
-DEFAULT_FROM_EMAIL = 'admin@kubierecki.pl'
-EMAIL_PORT = 587
+SERVER_EMAIL = os.environ['SERVER_MAIL']
+DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+EMAIL_PORT = os.environ['EMAIL_PORT']

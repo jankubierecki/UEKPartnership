@@ -1,0 +1,37 @@
+version: "3.3"
+services:
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    volumes:
+      - /etc/postgres/data:/var/lib/postgresql/data
+  django:
+    image: uekpartnership:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - static:/partnerships/static
+      - nginx_config:/partnerships/nginx
+      - /var/log/gunicorn:/var/log/gunicorn
+    env_file:
+      - ".env"
+
+  nginx:
+    restart: unless-stopped
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - static:/partnerships/static
+      - nginx_config:/partnerships/nginx
+      - /etc/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - django
+    entrypoint: "nginx -g 'daemon off;'"
+    env_file:
+      - ".env"
+
+volumes:
+  static:
+  nginx_config:
