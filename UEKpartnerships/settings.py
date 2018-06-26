@@ -174,6 +174,7 @@ ADMIN_REORDER = (
         'university.InstituteUnit', 'university.UniversityContactPerson', 'university.UniversityFaculty',
         'university.Institute')},
     'partnerships',
+    'authorization',
     'auth',
 
 )
@@ -190,3 +191,4 @@ COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter', 'com
 
 LOGIN_URL = '/login/'
 
+AUTH_USER_MODEL = 'authorization.User'

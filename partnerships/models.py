@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
 from django.db import models
 
 from company.models import Company, CompanyContactPerson
@@ -65,7 +66,7 @@ class Partnership(models.Model):
                                            default=KINDS_OF_PARTNERSHIPS[1][0])
     status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP,
                               default=STATUS_OF_PARTNERSHIP[2][0])
-    author = models.ForeignKey(User, verbose_name="Autor",
+    author = models.ForeignKey(get_user_model(), verbose_name="Autor",
                                related_name="partnerships", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -81,9 +82,9 @@ class PartnershipLogEntry(models.Model):
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizwoano", auto_now=True)
     description = models.TextField("Opis")
-    created_by = models.ForeignKey(User, verbose_name="Utworzono przez", related_name="created_log_entries",
+    created_by = models.ForeignKey(get_user_model(), verbose_name="Utworzono przez", related_name="created_log_entries",
                                    on_delete=models.SET_NULL, null=True)
-    updated_by = models.ForeignKey(User, verbose_name="Zaktualizowano przez", related_name="updated_log_entries",
+    updated_by = models.ForeignKey(get_user_model(), verbose_name="Zaktualizowano przez", related_name="updated_log_entries",
                                    on_delete=models.SET_NULL, null=True)
     partnership = models.ForeignKey(Partnership, on_delete=models.SET_NULL,
                                     null=True,

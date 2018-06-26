@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -36,7 +36,7 @@ class ReadOnlyModelAdmin(object):
 
     def has_only_view_permission(self, request, obj):
         content_type = ContentType.objects.get_for_model(obj)
-        user: User = request.user
+        user = request.user
         view_permission = "%s.view_%s" % (content_type.app_label, content_type.model)
         change_permission = "%s.change_%s" % (content_type.app_label, content_type.model)
         add_permission = "%s.add_%s" % (content_type.app_label, content_type.model)
