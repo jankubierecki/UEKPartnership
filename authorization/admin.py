@@ -8,6 +8,8 @@ from authorization.models import User, BasicUser
 
 
 class BaseUserAdmin(UserAdmin):
+    """ Users """
+
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name',)}),
@@ -41,6 +43,8 @@ class SuperuserUserAdmin(BaseUserAdmin):
 
 @admin.register(BasicUser)
 class BasicUserAdmin(BaseUserAdmin):
+    """ University Users """
+
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
@@ -48,7 +52,7 @@ class BasicUserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ( 'first_name', 'last_name', 'email', 'password1', 'password2'),
+            'fields': ('first_name', 'last_name', 'email', 'password1', 'password2'),
         }),
     )
 

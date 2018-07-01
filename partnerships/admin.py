@@ -40,7 +40,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     change_form_template = "admin/partnership_change_form.html"
     search_fields = ['contract_date', 'last_contact_date', 'university_contact_person__first_name',
                      'university_contact_person__last_name', 'company_contact_person__first_name',
-                     'company_contact_person__last_name', 'contract__company__name', 'name' ]
+                     'company_contact_person__last_name', 'contract__company__name', 'name']
     list_display = ['name', 'get_company_name', 'get_company_contact_person_name_url', 'get_institute_unit_name',
                     'get_university_contact_person_name_url', 'contract_date', 'last_contact_date',
                     'get_status_with_color', 'get_author_name']
@@ -113,22 +113,24 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_institute_unit_name.short_description = "Nazwa jednostki UEK"
 
     def get_university_contact_person_name_url(self, obj: Partnership):
+        full_name = "{0} {1}".format(obj.university_contact_person.first_name, obj.university_contact_person.last_name)
         if obj.university_contact_person is None:
             return " "
         return mark_safe(
             '<a href="{}">{}</a>'.format(
                 reverse("admin:university_universitycontactperson_change", args=(obj.university_contact_person.id,)),
-                obj.university_contact_person.email))
+                full_name))
 
     get_university_contact_person_name_url.short_description = "Osoba do kontaktu UEK"
 
     def get_company_contact_person_name_url(self, obj: Partnership):
+        full_name = "{0} {1}".format(obj.company_contact_person.first_name, obj.company_contact_person.last_name)
         if obj.company_contact_person is None:
             return " "
         return mark_safe(
             '<a href="{}">{}</a>'.format(
                 reverse("admin:company_companycontactperson_change", args=(obj.company_contact_person.id,)),
-                obj.company_contact_person.email))
+                full_name))
 
     get_company_contact_person_name_url.short_description = "Osoba do kontaktu Firmy"
 
