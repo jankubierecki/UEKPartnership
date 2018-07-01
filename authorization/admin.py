@@ -26,6 +26,7 @@ class BaseUserAdmin(UserAdmin):
     search_fields = ('first_name', 'last_name', 'email')
     ordering = ('last_name', 'first_name')
 
+
 @admin.register(User)
 class SuperuserUserAdmin(BaseUserAdmin):
     def has_add_permission(self, request):

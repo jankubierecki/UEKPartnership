@@ -11,6 +11,7 @@ class CompanyToCompanyContactPersonInlineAdmin(admin.TabularInline):
     extra = 0
     min_num = 1
     verbose_name_plural = "Przypisane osoby do kontaktu"
+    verbose_name = " osoby"
     fields = ['company_contact_person', 'created_at']
     readonly_fields = ['created_at']
     autocomplete_fields = ["company_contact_person"]
@@ -21,6 +22,7 @@ class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInli
     min_num = 0
     fields = ['company', 'created_at']
     verbose_name_plural = "Przypisane Firmy"
+    verbose_name = " - przypisz tej osobie kolejną firmę"
     autocomplete_fields = ["company"]
 
 
@@ -57,7 +59,8 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_website_url.short_description = 'Strona Internetowa'
 
     def get_queryset(self, request):
-        return Company.objects.prefetch_related("contracts", "contracts__institute_unit", "contracts__partnership").all()
+        return Company.objects.prefetch_related("contracts", "contracts__institute_unit",
+                                                "contracts__partnership").all()
 
 
 @admin.register(CompanyContactPerson)
@@ -91,7 +94,7 @@ class EmailInformedUsersAdmin(admin.ModelAdmin):
     search_fields = list_display
 
     def has_add_permission(self, request):
-        return request.user.is_superuser
+        return False
 
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser

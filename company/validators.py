@@ -24,5 +24,5 @@ def validate_nip(zip_code):
     reg = '^(\d{10})$'
     if not re.match(reg, zip_code):
         raise ValidationError(
-            _('To nie jest prawidłowy numer krs'),
+            _('To nie jest prawidłowy numer NIP'),
         )

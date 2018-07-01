@@ -17,8 +17,7 @@ class Company(models.Model):
                                 validators=[validators.validate_zip])
     industry = models.CharField("Branża", max_length=64, blank=True)
     company_size = models.CharField("Wielkość firmy", max_length=64, blank=True)
-    krs_code = models.CharField("Numer KRS", max_length=10, blank=False, null=False,
-                                validators=[validators.validate_krs])
+    krs_code = models.CharField("Numer KRS", max_length=10, validators=[validators.validate_krs])
     nip_code = models.CharField("Numer NIP", max_length=10, default=" ", validators=[validators.validate_nip])
     company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson",
                                                      related_name="companies")
@@ -34,7 +33,7 @@ class Company(models.Model):
         ordering = ["name"]
 
     def email_has_changed(self):
-        return self.email != Company.objects.filter(id=self.id).values_list(['email'], flat=True)[0]
+        return self.email != Company.objects.filter(id=self.id).values_list('email', flat=True)[0]
 
     def save(self, *args, **kwargs):
         should_notify = self.id is None or self.email_has_changed()
