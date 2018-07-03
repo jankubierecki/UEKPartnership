@@ -6,7 +6,7 @@ services:
     volumes:
       - /etc/postgres/data:/var/lib/postgresql/data
   django:
-    image: registry.gitlab.com/jankubierecki/uekpartnership
+    image: registry.gitlab.com/jankubierecki/uekpartnership:latest
     restart: unless-stopped
     depends_on:
       - postgres
