@@ -1,0 +1,8 @@
+{% block subject %} Powiadomienie o gromadzeniu danych osobowych firmy {{company_name}}{% endblock %}
+{% block plain %}
+  Dzień Dobry {{company_name}},
+
+  ta wiadomość jest po to, aby poinformować Cię o gromadzeniu Twoich danych osobowych przez Uniwersytet Ekonomiczny w Krakowie.
+
+
+{% endblock %}
