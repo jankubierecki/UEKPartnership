@@ -1,6 +1,6 @@
 image: docker:latest
 services:
-  -docker:dind
+  - docker:dind
 stages:
   - build
   - test
