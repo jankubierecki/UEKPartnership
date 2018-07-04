@@ -14,6 +14,7 @@ test:
   stage: test
   script:
     - echo "this is test"
+    - echo $CI_BUILD_REF
 push:
   stage: push
   script:
