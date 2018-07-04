@@ -18,7 +18,7 @@ test:
 push:
   stage: push
   script:
-    - echo "this is test"
+    - echo "this is push"
 deploy:
   stage: deploy
   script:
