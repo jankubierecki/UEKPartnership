@@ -26,6 +26,7 @@ unittests:
     - docker-compose up -d postgres django
     - ./wait_for_container.sh django
     - sleep 10s
+    - docker ps -q  --filter status=running --filter name=postgres
     - docker exec uekpartnership_django_1 /partnerships/manage.py test
 coverage:
   stage: test
