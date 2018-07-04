@@ -1,7 +1,7 @@
 from .settings import *
 import os
 
-ALLOWED_HOSTS = [os.environ['DOMAIN'], 'www.' + os.environ['DOMAIN']]
+ALLOWED_HOSTS = [os.environ['DOMAIN'], 'www.' + os.environ['DOMAIN'], 'localhost']
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 
