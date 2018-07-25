@@ -7,3 +7,4 @@ django-modeladmin-reorder
 django-compressor==2.2
 csscompressor==0.9.5
 django-templated-email==2.2.0
+docker-compose
