@@ -6,6 +6,8 @@ from time import sleep
 from compose.cli.main import TopLevelCommand, project_from_options
 from contextlib import redirect_stdout
 
+print("outside top")
+
 
 def get_container_id(container_name):
     options = {
@@ -37,8 +39,9 @@ def main():
     print("all containers are ready")
 
 
-print("test3")
+print("outside")
 
 if __name__ == "__main__":
-    print("test2")
+    print("inside 1")
     main()
+    print("inside 2")
