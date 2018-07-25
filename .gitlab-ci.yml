@@ -13,9 +13,12 @@ script:
   stage: script
   script:
     - echo "unittest:test"
-    - apt-get update
-    - apt-get install python3
-    - apt-get install python3-pip
+    - apk add --no-cache python3
+    - apk add --no-cache python
+    - apk add --no-cache py3-pip
+    - apk add --no-cache py-pip
+    - pip install --upgrade pip
+    - pip3 install --upgrade pip
     - /usr/bin/env
     - pip3 install docker-compose
     - python3 wait_for_container.py django postgres nginx
