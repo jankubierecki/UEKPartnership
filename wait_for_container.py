@@ -8,6 +8,8 @@ from time import sleep
 from compose.cli.main import TopLevelCommand, project_from_options
 from contextlib import redirect_stdout
 
+print(sys.version)
+
 
 def get_container_id(container_name):
 
