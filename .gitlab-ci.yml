@@ -20,14 +20,12 @@ unittests:
     - echo "unittest:test"
     - apk add --no-cache python3
     - apk add --no-cache py3-pip
-    - pip install docker-compose     
+    - pip3 install docker-compose
     - docker pull registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
     - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF registry.gitlab.com/jankubierecki/uekpartnership:latest
     - docker-compose pull
     - docker-compose up -d postgres django
     - ./wait_for_container.py django postgres nginx
-    - sleep 10s
-    - docker ps -q  --filter status=running --filter name=postgres
     - docker exec uekpartnership_django_1 /partnerships/manage.py test
 coverage:
   stage: test
