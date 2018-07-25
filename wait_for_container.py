@@ -7,8 +7,6 @@ from time import sleep
 from compose.cli.main import TopLevelCommand, project_from_options
 from contextlib import redirect_stdout
 
-print("outside top")
-
 
 def get_container_id(container_name):
     options = {
@@ -30,19 +28,17 @@ def get_container_id(container_name):
 
 
 def main():
-    print("waiting for containers...", sys.argv[1:])
+    print("Waiting for containers ", sys.argv[1:])
 
     for container_name in sys.argv[1:]:
-        while get_container_id(container_name) == "":
-            print("waiting for: ", container_name)
+        tries_left = 30
+        while get_container_id(container_name) == "" and tries_left > 0:
+            print("Waiting for: ", container_name)
+            tries_left -= 1
             sleep(1)
 
-    print("all containers are ready")
+    print("All containers are ready")
 
-
-print("outside")
 
 if __name__ == "__main__":
-    print("inside 1")
     main()
-    print("inside 2")
