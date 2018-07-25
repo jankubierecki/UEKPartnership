@@ -11,14 +11,14 @@ stages:
 build:
   stage: build
   script:
-    - echo "build:build"
+    - echo "BUILD:build"
     - docker login registry.gitlab.com -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
     - docker build -t registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF .
     - docker push registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
 unittests:
   stage: test
   script:
-    - echo "unittest:test"
+    - echo "TEST:unittests"
     - apk add --no-cache python3
     - apk add --no-cache py3-pip
     - pip3 install --upgrade pip
@@ -29,7 +29,7 @@ unittests:
     - docker-compose pull
     - docker-compose up -d postgres django
     - python3 wait_for_container.py django postgres
-    - docker-compose exec django /partnerships/manage.py test
+    - docker-compose -T exec django python manage.py test --noinput
 coverage:
   stage: test
   script:
@@ -38,7 +38,11 @@ coverage:
 push:
   stage: push
   script:
-    - echo "this is push"
+    - echo "PUSH:push"
+    - docker login registry.gitlab.com -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+    - docker pull registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
+    - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF registry.gitlab.com/jankubierecki/uekpartnership:latest
+    - docker push registry.gitlab.com/jankubierecki/uekpartnership:latest
 deploy_test:
   stage: deploy
   script:
