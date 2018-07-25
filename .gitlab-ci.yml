@@ -37,7 +37,7 @@ unittests:
     - docker-compose up -d postgres django
     - python3 --version
     - python3 -c 'print("test")'
-    - python3 wait_for_container.py django postgres nginx
+    - python wait_for_container.py django postgres nginx
     - docker-compose exec django /partnerships/manage.py test
 coverage:
   stage: test
