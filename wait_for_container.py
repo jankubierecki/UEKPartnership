@@ -36,6 +36,8 @@ def main():
             print("Waiting for: ", container_name)
             tries_left -= 1
             sleep(1)
+        if tries_left <= 0:
+            raise Exception("Out of tries for container: {}".format(container_name))
 
     print("All containers are ready")
 
