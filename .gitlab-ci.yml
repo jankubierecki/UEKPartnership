@@ -29,7 +29,7 @@ unittests:
     - docker-compose pull
     - docker-compose up -d postgres django
     - python3 wait_for_container.py django postgres
-    - docker-compose -T exec django python manage.py test --noinput
+    - docker-compose exec -T django python manage.py test --noinput
 coverage:
   stage: test
   script:
