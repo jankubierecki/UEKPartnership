@@ -11,7 +11,20 @@ print("outside top")
 
 
 def get_container_id(container_name):
-   return "asd"
+    options = {
+        "--quiet": True,
+        "--filter": "status=running",
+        "nginx": True,
+        "--services": False,
+        "SERVICE": [container_name],
+    }
+
+    project = project_from_options(os.path.dirname(os.path.abspath(__file__)), options)
+    cmd = TopLevelCommand(project)
+    result = io.StringIO()
+
+
+    return "asdasd"
 
 
 def main():
