@@ -5,6 +5,8 @@ stages:
   - build
   - test
   - push
+  - deploy_test
+  - integration_test
   - deploy
 
 build:
@@ -28,6 +30,7 @@ unittests:
     - docker-compose pull
     - docker-compose up -d postgres django
     - python3 wait_for_container.py django postgres
+    - ./wait_for_postgres.sh
     - docker-compose logs postgres
     - docker-compose logs django
     - docker-compose exec -T django python manage.py test --noinput
@@ -46,13 +49,19 @@ push:
     - docker push registry.gitlab.com/jankubierecki/uekpartnership:latest
 
 deploy_test:
-  stage: deploy
+  stage: deploy_test
   script:
     - echo "DEPLOY:deploy_test"
   only:
     - master
   environment: 
     name: test
+
+integration_test:
+  stage: integration_test
+  script:
+    - echo "INTEGRATION_TEST:test"
+    - curl https://kubierecki.pl
 
 deploy_staging:
   stage: deploy
@@ -62,7 +71,7 @@ deploy_staging:
   environment:
     name: staging
 
-deploy_staging:
+deploy_production:
   stage: deploy
   script:
     - echo "DEPLOY:deploy_production"
