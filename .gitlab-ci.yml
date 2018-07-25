@@ -16,6 +16,7 @@ script:
     - apt-get update
     - apt-get install python3
     - apt-get install python3-pip
+    - /usr/bin/env
     - pip3 install docker-compose
     - python3 wait_for_container.py django postgres nginx
 build:
