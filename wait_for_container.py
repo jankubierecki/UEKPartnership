@@ -10,6 +10,7 @@ from contextlib import redirect_stdout
 
 
 def get_container_id(container_name):
+
     options = {
         "--quiet": True,
         "--filter": "status=running",
@@ -24,8 +25,6 @@ def get_container_id(container_name):
 
     with redirect_stdout(result):
         cmd.ps(options)
-
-
 
     return result.getvalue()
 

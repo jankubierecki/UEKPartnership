@@ -25,8 +25,9 @@ unittests:
     - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF registry.gitlab.com/jankubierecki/uekpartnership:latest
     - docker-compose pull
     - docker-compose up -d postgres django
-    - ./wait_for_container.py django postgres nginx
-    - docker exec uekpartnership_django_1 /partnerships/manage.py test
+    - python3 --version
+    - python3 wait_for_container.py django postgres nginx
+    - docker-compose exec django /partnerships/manage.py test
 coverage:
   stage: test
   script:
