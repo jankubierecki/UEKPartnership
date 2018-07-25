@@ -23,8 +23,10 @@ def get_container_id(container_name):
     cmd = TopLevelCommand(project)
     result = io.StringIO()
 
+    with redirect_stdout(result):
+        cmd.ps(options)
 
-    return "asdasd"
+    return result.getvalue()
 
 
 def main():
