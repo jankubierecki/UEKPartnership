@@ -30,6 +30,7 @@ def get_container_id(container_name):
 
 
 def main():
+
     print("waiting for containers...", sys.argv[1:])
 
     for container_name in sys.argv[1:]:
