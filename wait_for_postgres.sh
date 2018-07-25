@@ -1,4 +1,4 @@
-while ! nc -z localhost 5432
+while ! nc -z localhost 9000
 do
 	echo "Retrying..."
 	sleep 2

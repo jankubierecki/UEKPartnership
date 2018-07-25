@@ -4,7 +4,7 @@ services:
     image: postgres:alpine
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "9000:5432"
     volumes:
       - /etc/postgres/data:/var/lib/postgresql/data
   django:
