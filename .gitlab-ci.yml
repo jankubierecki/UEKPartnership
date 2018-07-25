@@ -6,7 +6,6 @@ stages:
   - test
   - push
   - deploy
-  - cleanup
 
 build:
   stage: build
@@ -24,7 +23,6 @@ unittests:
     - pip3 install --upgrade pip
     - pip3 install docker-compose
     - export PYTHONUNBUFFERED=1
-    - export SECRET_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
     - docker pull registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
     - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF registry.gitlab.com/jankubierecki/uekpartnership:latest
     - docker-compose pull
@@ -44,23 +42,28 @@ push:
     - docker pull registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
     - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF registry.gitlab.com/jankubierecki/uekpartnership:latest
     - docker push registry.gitlab.com/jankubierecki/uekpartnership:latest
+
 deploy_test:
   stage: deploy
   script:
-    - echo "this is deploy_"
+    - echo "DEPLOY:deploy_test"
   only:
     - master
   environment: 
     name: test
+
 deploy_staging:
   stage: deploy
   script:
-    - echo "this is deploy"
+    - echo "DEPLOY:deploy_staging"
   when: manual
   environment:
     name: staging
-cleanup:
-  stage: cleanup
+
+deploy_staging:
+  stage: deploy
   script:
-    - echo "this is cleanup"
-  when: always
+    - echo "DEPLOY:deploy_production"
+  when: manual
+  environment:
+    name: production
