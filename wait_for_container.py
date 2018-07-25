@@ -8,11 +8,8 @@ from time import sleep
 from compose.cli.main import TopLevelCommand, project_from_options
 from contextlib import redirect_stdout
 
-print(sys.version)
-
 
 def get_container_id(container_name):
-
     options = {
         "--quiet": True,
         "--filter": "status=running",
@@ -32,7 +29,6 @@ def get_container_id(container_name):
 
 
 def main():
-
     print("waiting for containers...", sys.argv[1:])
 
     for container_name in sys.argv[1:]:
@@ -43,5 +39,8 @@ def main():
     print("all containers are ready")
 
 
+print("test3")
+
 if __name__ == "__main__":
+    print("test2")
     main()
