@@ -10,9 +10,17 @@ from contextlib import redirect_stdout
 print("outside top")
 
 
+def get_container_id(container_name):
+   return "asd"
+
+
 def main():
     print("waiting for containers...", sys.argv[1:])
 
+    for container_name in sys.argv[1:]:
+        while get_container_id(container_name) == "":
+            print("waiting for: ", container_name)
+            sleep(1)
 
     print("all containers are ready")
 
