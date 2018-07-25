@@ -14,7 +14,11 @@ script:
   script:
     - echo "unittest:test"
     - apk add --no-cache python3
+    - apk add --no-cache python
     - apk add --no-cache py3-pip
+    - apk add --no-cache py-pip
+    - pip install --upgrade pip
+    - pip3 install --upgrade pip3
     - pip3 install docker-compose
     - ./wait_for_container.py django postgres nginx
 build:
