@@ -8,8 +8,16 @@ from compose.cli.main import TopLevelCommand, project_from_options
 from contextlib import redirect_stdout
 
 print("outside top")
+
+
 def main():
-    print("DUPA")
+    print("waiting for containers...", sys.argv[1:])
+
+
+    print("all containers are ready")
+
+
+print("outside")
 
 if __name__ == "__main__":
     print("inside 1")
