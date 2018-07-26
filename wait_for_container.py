@@ -17,8 +17,6 @@ def get_container_id(container_name):
         "SERVICE": [container_name],
     }
 
-    print(os.path.dirname(os.path.abspath(__file__)))
-
     project = project_from_options(os.path.dirname(os.path.abspath(__file__)), options)
     cmd = TopLevelCommand(project)
     result = io.StringIO()
@@ -30,9 +28,10 @@ def get_container_id(container_name):
 
 
 def main():
-    print("Waiting for containers ", sys.argv[1:])
+    args = sys.argv[1:]
+    print("Waiting for containers ", args)
 
-    for container_name in sys.argv[1:]:
+    for container_name in args:
         tries_left = 30
         while get_container_id(container_name) == "" and tries_left > 0:
             print("Waiting for: ", container_name)
