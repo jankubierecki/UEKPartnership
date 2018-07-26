@@ -25,6 +25,7 @@ def get_container_id(container_name):
     with redirect_stdout(result):
         cmd.ps(options)
 
+    print(result.getvalue())
     return result.getvalue()
 
 
