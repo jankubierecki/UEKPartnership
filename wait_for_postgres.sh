@@ -1,5 +1,1 @@
-while ! nc -z 127.0.0.1 9000
-do
-	echo "Retrying..."
-	sleep 2
-done
+until docker run --rm --link uekpartnership_postgres_1 :pg --net docker-compose_default postgres:alpine pg_isready -U postgres -h pg; do sleep 1; done
