@@ -17,6 +17,8 @@ def get_container_id(container_name):
         "SERVICE": [container_name],
     }
 
+    print(os.path.dirname(os.path.abspath(__file__)))
+
     project = project_from_options(os.path.dirname(os.path.abspath(__file__)), options)
     cmd = TopLevelCommand(project)
     result = io.StringIO()
