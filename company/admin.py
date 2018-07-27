@@ -28,6 +28,7 @@ class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInli
 
 @admin.register(Company)
 class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
+    change_form_template = "admin/company_change_form.html"
     change_list_template = "admin/company_change_list.html"
     list_display = ["name", "city", "street", "zip_code", "phone", "email", "industry", "get_website_url",
                     "created_at", "updated_at"]

@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.views import View
 
+from company.models import Company
 from partnerships.models import Partnership
 
 
@@ -58,4 +59,27 @@ class PartnershipAutocomplete(View):
         for partnership in partnerships:
             partnership["url"] = reverse("admin:partnerships_partnership_change", args=[partnership.get("id")])
 
-        return JsonResponse(partnerships, safe=False,)
+        return JsonResponse(partnerships, safe=False, )
+
+
+class CompanyAutocomplete(View):
+    def get_queryset(self, request, q):
+        company_id = request.GET.get("id")
+        if company_id is not None:
+            return Company.objects.filter(q).exclude(id=company_id).distinct().values("name", "id")[:5]
+        else:
+            return Company.objects.filter(q).distinct().values("name", "id")[:5]
+
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get("term")
+        if query is None or len(query) < 3:
+            return JsonResponse([], safe=False)
+        split_query = query.split(" ")
+        q = Q()
+        for term in split_query:
+            q |= Q(name__icontains=term)
+        companies = list(self.get_queryset(request, q))
+        for company in companies:
+            company["url"] = reverse("admin:company_company_change", args=[company.get("id")])
+
+        return JsonResponse(companies, safe=False, )

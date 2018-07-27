@@ -4,11 +4,11 @@
 {% block extrahead %}{{ block.super }}
     <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
     {{ media }}
-    <script type="application/javascript">PARTNERSHIP_ID = '{{ adminform.form.instance.id }}'</script>
+    <script type="application/javascript">COMPANY_ID = '{{ adminform.form.instance.id }}'</script>
     {% compress js %}
         <script type="text/javascript" src="{% static "university/js/bind_with_delay.js" %}"></script>
         <script type="text/javascript" src="{% static "university/js/autocomplete.js" %}"></script>
-        <script type="text/javascript" src="{% static "university/js/partnership_autocomplete.js" %}"></script>
+        <script type="text/javascript" src="{% static "university/js/company_autocomplete.js" %}"></script>
 
     {% endcompress %}
 {% endblock %}
@@ -19,6 +19,7 @@
         <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
     {% endcompress %}
 {% endblock %}
+
 {% block coltype %}colM{% endblock %}
 
 {% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
@@ -69,24 +70,20 @@
                     </p>
                     {{ adminform.form.non_field_errors }}
                 {% endif %}
-                {% block inline_field_sets %}
-                    {% with inline_admin_formsets.0 as  inline_admin_formset %}
-                        {% include inline_admin_formset.opts.template %}
-                    {% endwith %}
-                {% endblock %}
-                <h2>Współpraca</h2>
 
                 {% block field_sets %}
                     {% for fieldset in adminform %}
                         {% include "admin/includes/fieldset.html" %}
                     {% endfor %}
                 {% endblock %}
-                {% with inline_admin_formsets.1 as  inline_admin_formset %}
-                    {% include inline_admin_formset.opts.template %}
-                {% endwith %}
 
                 {% block after_field_sets %}{% endblock %}
 
+                {% block inline_field_sets %}
+                    {% for inline_admin_formset in inline_admin_formsets %}
+                        {% include inline_admin_formset.opts.template %}
+                    {% endfor %}
+                {% endblock %}
 
                 {% block after_related_objects %}{% endblock %}
 
