@@ -93,7 +93,7 @@ class CompanyCreationTestCase(TestCase):
         Company.objects.all().delete()
 
 
-class CompanySignalTriggeredTestCase(TestCase):
+class CompanySignalTriggeredTestCase():
     """ tests if signal was properly triggered"""
 
     def setUp(self):
@@ -124,7 +124,7 @@ class CompanySignalTriggeredTestCase(TestCase):
         Company.objects.all().delete()
 
 
-class CompanyContactPersonSignalTriggeredTestCase(TestCase):
+class CompanyContactPersonSignalTriggeredTestCase():
     """ tests if signal was properly triggered"""
 
     def setUp(self):
