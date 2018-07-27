@@ -46,7 +46,7 @@ class CompanyContactPerson(models.Model):
     first_name = models.CharField("Imię", max_length=255)
     last_name = models.CharField("Nazwisko", max_length=255)
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
-    email = models.EmailField("Email", max_length=50, default=" ")
+    email = models.EmailField("Email", max_length=50, default=" ", validators=[validators.validate_email])
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
     privacy_email_date_send = models.DateTimeField("Data powiadomienia o przetwarzaniu danych", null=True,

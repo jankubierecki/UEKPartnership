@@ -94,30 +94,66 @@ class CompanyCreationTestCase(TestCase):
         del companies
 
 
-class SignalTriggeredTestCase(TestCase):
+class CompanySignalTriggeredTestCase(TestCase):
     """ tests if signal was properly triggered"""
 
     def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
+        self.company = Company.objects.create(name='example', created_at=timezone.now(), email='example@gmail.com',
+                                              website='https://www.example.com', krs_code=1111111111,
+                                              nip_code=1111111111)
 
     @mock.patch('company.models.Company.save')
     def test_company_creation_signal_triggered(self, mocked):
-        self.company = Company.objects.create(name='Intel', created_at=timezone.now(), email='jankubierecki@gmail.com',
-                                              website='intel.com', krs_code=1111111111, nip_code=1111111111)
-        self.assertTrue(mocked.called)
+        """ tests if mocked was triggered"""
 
+        self.assertTrue(mocked.called)
+        self.assertEqual(mocked.call_count, 1)
+
+    @mock.patch('company.models.Company.save')
+    def test_company_creation_signal_not_triggered(self, mocked):
+        """ tests if mocked was triggered when wrong krs_code was given"""
+
+        self.company.krs_code = ""
+
+        try:
+            self.company.full_clean()
+        except ValidationError as e:
+            self.assertFalse(mocked.called)
+            self.assertEqual(mocked.call_count, 0)
+
+    def tearDown(self):
+        objects = Company.objects.all()
+        del objects
+
+
+class CompanyContactPersonSignalTriggeredTestCase(TestCase):
+    """ tests if signal was properly triggered"""
+
+    def setUp(self):
+        self.company_contact_person = CompanyContactPerson.objects.create(first_name='example', last_name='example',
+                                                                          email='example@example.com')
+
+    @mock.patch('company.models.CompanyContactPerson.save')
+    def test_company_creation_signal_triggered(self, mocked):
+
+        self.assertTrue(mocked.called)
         self.assertEqual(mocked.call_count, 1)
 
     @mock.patch('company.models.CompanyContactPerson.save')
-    def test_company_contact_person_creation_signal_triggered(self, mocked):
-        self.company_contact_person = CompanyContactPerson.objects.create(first_name='Robert', last_name='Steve',
-                                                                          email='rs@gmail.com')
-        self.assertTrue(mocked.called)
+    def test_company_creation_signal_not_triggered(self, mocked):
+        """ tests if mocked was triggered when wrong email was given"""
 
-        self.assertEqual(mocked.call_count, 1)
+        self.company_contact_person.email = ""
+
+        try:
+            self.company_contact_person.full_clean()
+        except ValidationError as e:
+            self.assertFalse(mocked.called)
+            self.assertEqual(mocked.call_count, 0)
+
+    def tearDown(self):
+        objects = CompanyContactPerson.objects.all()
+        del objects
 
 
 # class CompanyEmailContextVariablesTestCase(TestCase):
@@ -157,22 +193,22 @@ class SignalTriggeredTestCase(TestCase):
 #
 #         self.assertEqual(context['company_contact_person_name'], self.company_contact_person.name)
 
-
-class CompanyEmailShouldNotifyTestCase(TestCase):
-    """ tests if unit should have been noticed """
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
-
-class CompanyContactPersonShouldNotifyTestCase(TestCase):
-    """ tests if unit should have been noticed """
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
+#
+# class CompanyEmailShouldNotifyTestCase(TestCase):
+#     """ tests if unit should have been noticed """
+#
+#     def setUp(self):
+#         pass
+#
+#     def tearDown(self):
+#         pass
+#
+#
+# class CompanyContactPersonShouldNotifyTestCase(TestCase):
+#     """ tests if unit should have been noticed """
+#
+#     def setUp(self):
+#         pass
+#
+#     def tearDown(self):
+#         pass
