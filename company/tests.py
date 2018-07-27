@@ -90,8 +90,7 @@ class CompanyCreationTestCase(TestCase):
                 self.assertTrue(1 == 0)
 
     def tearDown(self):
-        companies = Company.objects.all()
-        del companies
+        Company.objects.all().delete()
 
 
 class CompanySignalTriggeredTestCase(TestCase):
@@ -122,8 +121,7 @@ class CompanySignalTriggeredTestCase(TestCase):
             self.assertEqual(mocked.call_count, 0)
 
     def tearDown(self):
-        objects = Company.objects.all()
-        del objects
+        Company.objects.all().delete()
 
 
 class CompanyContactPersonSignalTriggeredTestCase(TestCase):
@@ -152,5 +150,5 @@ class CompanyContactPersonSignalTriggeredTestCase(TestCase):
             self.assertEqual(mocked.call_count, 0)
 
     def tearDown(self):
-        objects = CompanyContactPerson.objects.all()
-        del objects
+        CompanyContactPerson.objects.all().delete()
+

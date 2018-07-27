@@ -36,8 +36,7 @@ coverage:
   stage: test
   script:
     - echo "this is coverage"
-    - echo $CI_BUILD_REF
-    - docker run uekpartnership:latest /bin/bash -c "python -m coverage run tests/tests.py && python -m coverage report -m"
+    - echo $CI_BUILD_REFs
 push:
   stage: push
   script:
