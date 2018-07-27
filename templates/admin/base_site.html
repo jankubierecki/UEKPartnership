@@ -1,8 +1,12 @@
 {% extends "admin/base.html" %}
 {% load staticfiles compress%}
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+{% block responsive %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+{% endblock %}
+
 {% block extrastyle %}
-    {% compress css %}gi
+    {% compress css %}
     {{ block.super }}
     <style>
         html, body, #container {
@@ -113,6 +117,8 @@
             padding: 20px 20px !important;
         }
     </style>
+         <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}" />
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}" />{% endif %}
     {% endcompress %}
 {% endblock %}
 {% block branding %}

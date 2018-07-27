@@ -3,23 +3,20 @@
 
 {% block extrahead %}
     {% compress js %}
-        <script type="text/javascript" src="{% static "admin/js/jsi18n.js" %}"></script>
         {{ block.super }}
-        {{ media.js }}
-        <script type="text/javascript">COMPANY_ID = '{{ adminform.form.instance.id }}'</script>
-        <script type="text/javascript" src="{% static "university/js/bind_with_delay.js" %}"></script>
-        <script type="text/javascript" src="{% static "university/js/autocomplete.js" %}"></script>
-        <script type="text/javascript" src="{% static "university/js/company_autocomplete.js" %}"></script>
-
+   <script type="text/javascript" src="{% static "admin/js/jsi18n.js" %}"></script>
+    {{ media.js }}
     {% endcompress %}
 {% endblock %}
 
 {% block extrastyle %}
-    {% compress css %}
+  {% compress css %}
+         <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
         {{ block.super }}
-           {{ media.css}}
-        <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
+    {{ media.css }}
+
     {% endcompress %}
+
 {% endblock %}
 
 {% block coltype %}colM{% endblock %}
@@ -92,15 +89,13 @@
                 {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
 
                 {% block admin_change_form_document_ready %}
-                    {% compress js %}
-                        <script type="text/javascript"
-                                id="django-admin-form-add-constants"
-                                src="{% static 'admin/js/change_form.js' %}"
-                                {% if adminform and add %}
-                                data-model-name="{{ opts.model_name }}"
-                                {% endif %}>
-                        </script>
-                    {% endcompress %}
+                    <script type="text/javascript"
+                            id="django-admin-form-add-constants"
+                            src="{% static 'admin/js/change_form.js' %}"
+                            {% if adminform and add %}
+                            data-model-name="{{ opts.model_name }}"
+                            {% endif %}>
+                    </script>
                 {% endblock %}
 
                 {# JavaScript for prepopulated fields #}

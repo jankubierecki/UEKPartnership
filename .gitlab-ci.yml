@@ -31,7 +31,7 @@ unittests:
     - docker-compose -p uekpartnership up -d postgres django
     - python3 wait_for_container.py django postgres
     - ./wait_for_postgres.sh
-    - docker-compose exec -T django run_tests.sh
+    - docker-compose exec -T django ./run_tests.sh
 
 push:
   stage: push

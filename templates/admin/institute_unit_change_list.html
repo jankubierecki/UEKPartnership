@@ -1,28 +1,32 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_urls static admin_list university_tags %}
+{% load i18n admin_urls static admin_list university_tags compress %}
 
 {% block extrastyle %}
-    {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}"/>
-    {% if cl.formset %}
-        <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
-    {% endif %}
-    {% if cl.formset or action_form %}
-        <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
-    {% endif %}
-    {{ media.css }}
-    {% if not actions_on_top and not actions_on_bottom %}
-        <style>
-            #changelist table thead th:first-child {
-                width: inherit
-            }
-        </style>
-    {% endif %}
+    {% compress css %}
+        {{ block.super }}
+        <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}"/>
+        {% if cl.formset %}
+            <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
+        {% endif %}
+        {{ media.css }}
+        {% if not actions_on_top and not actions_on_bottom %}
+            <style>
+                #changelist table thead th:first-child {
+                    width: inherit
+                }
+            </style>
+        {% endif %}
+    {% endcompress %}
 {% endblock %}
 
 {% block extrahead %}
-    {{ block.super }}
-    {{ media.js }}
+    {% compress js %}
+        {% if cl.formset or action_form %}
+            <script type="text/javascript" src="{% static 'admin/js/jsi18n.js' %}"></script>
+        {% endif %}
+        {{ block.super }}
+        {{ media.js }}
+    {% endcompress %}
 {% endblock %}
 
 {% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}

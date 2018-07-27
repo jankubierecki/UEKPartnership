@@ -4,3 +4,5 @@ venv/
 /static
 /media
 $user=root
+
+.coverage
