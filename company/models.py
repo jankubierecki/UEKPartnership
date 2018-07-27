@@ -8,7 +8,7 @@ class Company(models.Model):
     name = models.CharField("Nazwa", max_length=255)
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
-    email = models.CharField("Email do firmy", max_length=50, default=" ")
+    email = models.CharField("Email do firmy", max_length=50, default=" ", validators=[validators.validate_email])
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
     website = models.URLField("Strona Internetowa")
     city = models.CharField("Miasto", max_length=64, blank=True)

@@ -26,3 +26,11 @@ def validate_nip(zip_code):
         raise ValidationError(
             _('To nie jest prawidłowy numer NIP'),
         )
+
+
+def validate_email(email):
+    reg = '^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$'
+    if not re.match(reg, email):
+        raise ValidationError(
+            _('To nie jest prawidłowy email'),
+        )
