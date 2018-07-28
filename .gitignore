@@ -4,5 +4,5 @@ venv/
 /static
 /media
 $user=root
-
+/postgres-compose-local
 .coverage
