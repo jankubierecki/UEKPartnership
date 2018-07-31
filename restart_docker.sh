@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+cd /root/UEKPartnership/
 docker-compose pull django
 docker-compose stop django nginx
 docker-compose rm -f django nginx
