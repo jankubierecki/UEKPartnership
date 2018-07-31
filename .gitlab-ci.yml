@@ -46,6 +46,7 @@ deploy_test:
   stage: deploy_test
   script:
     - echo "DEPLOY:deploy_test"
+    - apk add --update --no-cache openssh
     - mkdir -p ~/.ssh
     - echo "$TEST_SERVER_KEY" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
