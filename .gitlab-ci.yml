@@ -46,6 +46,12 @@ deploy_test:
   stage: deploy_test
   script:
     - echo "DEPLOY:deploy_test"
+    - mkdir -p ~/.ssh
+    - echo "$TEST_SERVER_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - scp -i ~/.ssh/id_rsa -r ./docker-compose.yml ./restart_docker.sh root@${DEPLOYMENT_SERVER_IP}:/partnerships/
+    - ssh -i ~/.ssh.id_rsa root@kubierecki.pl "/partnerships/restart_docker.sh"
+
   only:
     - master
   environment: 
