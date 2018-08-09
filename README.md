@@ -21,4 +21,9 @@
 * [django-templated-email](https://github.com/vintasoftware/django-templated-email)
 
 
+### Installing
+1. ```docker volume create pgdata```
+2. ```docker-compose up```
+3. ```python manage.py migrate```
+4. ```python manage.py createsuperuser```
 
