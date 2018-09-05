@@ -1,0 +1,36 @@
+output-format: json
+
+strictness: medium
+test-warnings: true
+doc-warnings: false
+
+ignore-paths:
+- docs
+- venv
+- templates
+- static
+- common
+- nginx
+- README.md
+- requirements.txt
+- university/migrations
+- partnerships/migrations
+- company/migrations
+
+
+pylint:
+  disable:
+  - line-too-long
+  run: true
+
+pep8:
+  disable:
+  - W602
+  - W603
+  enable:
+  - W601
+  options:
+    max-line-length: 80
+
+mccabe:
+  run: false
