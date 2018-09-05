@@ -1,4 +1,4 @@
-{% block subject %} Powiadomienie o gromadzeniu danych osobowych firmy {{company_contact_person_name}}{% endblock %}
+{% block subject %} Powiadomienie o gromadzeniu danych osobowych uzytkownika {{company_contact_person_name}}{% endblock %}
 {% block plain %}
   Dzień Dobry {{company_contact_person_name}},
 

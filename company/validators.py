@@ -20,9 +20,9 @@ def validate_zip(zip_code):
         )
 
 
-def validate_nip(zip_code):
+def validate_nip(nip_code):
     reg = '^(\d{10})$'
-    if not re.match(reg, zip_code):
+    if not re.match(reg, nip_code):
         raise ValidationError(
             _('To nie jest prawidłowy numer NIP'),
         )

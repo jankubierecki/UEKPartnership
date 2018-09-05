@@ -1,31 +1,85 @@
+from django.db import transaction
 from django.test import TestCase
+from django.core.exceptions import ObjectDoesNotExist
 from unittest import mock
 
 from django.core.exceptions import ValidationError
+from django.db.utils import IntegrityError
+from django.utils import timezone
 
 from company.models import Company, CompanyContactPerson
-from .signals import *
+from .signals import company_email_changed, company_contact_person_email_changed, send_mail_to_company
+
+from django.core import mail
 
 
 class CompanyCreationTestCase(TestCase):
     def setUp(self):
-        """ company creation with proper arguments """
+        """ company initialization with proper arguments """
 
-        self.company = Company.objects.create(name='example', created_at=timezone.now(), email='example@example.com',
-                                              website='https://www.example.com', krs_code=1111111111,
-                                              nip_code=1111111111)
+        self.company = Company(name='example', created_at=timezone.now(), email='example@example.com',
+                               website='https://www.example.com', krs_code=1111111111,
+                               nip_code=1111111111)
 
     def test_company_created_raises_validation_error(self):
-        """ tests if validation error works correctly"""
+        """ tests if validation error works correctly """
 
         self.assertRaises(ValidationError, self.company.full_clean())
 
     def test_company_created(self):
         """ tests if company was created correctly with proper arguments"""
 
-        self.company.full_clean()
+        self.company.save()
 
-        self.assertIsNotNone(Company.objects.filter(pk=self.company.pk))
+        self.assertIsNotNone(Company.objects.get(id=self.company.id))
+
+    def test_company_not_created_without_save(self):
+        """ tests if company was not created """
+
+        self.assertRaises(ObjectDoesNotExist, self.company.full_clean())
+
+    def test_company_not_created_without_argument(self):
+        """ tests if creation fails when argument is not provided"""
+
+        try:
+            with transaction.atomic():
+                self.company.name = None
+                self.company.save()
+        except IntegrityError:
+            pass
+        else:
+            self.fail()
+
+    def test_company_updated(self):
+        """ tests if object was updated correctly """
+
+        self.company.save()
+
+        try:
+            with transaction.atomic():
+                self.company.name = 'company'
+                self.company.save()
+        except Exception:
+            self.fail()
+        else:
+            self.assertTrue(self.company.name == 'company')
+
+    def test_company_not_updated(self):
+        """ tests if object was not updated with wrong arguments """
+
+        self.company.save()
+
+        try:
+            with transaction.atomic():
+                self.company.nip_code = ''
+                self.company.full_clean()
+                self.company.save()
+        except Exception:
+            assert True
+
+        self.company = Company.objects.get(id=self.company.id)
+
+        self.assertEqual(self.company.nip_code, '1111111111')
 
     def test_company_validation_email_created(self):
         """ tests email validation """
@@ -93,62 +147,166 @@ class CompanyCreationTestCase(TestCase):
         Company.objects.all().delete()
 
 
-class CompanySignalTriggeredTestCase():
+class CompanySignalTriggeredTestCase(TestCase):
     """ tests if signal was properly triggered"""
 
     def setUp(self):
-        self.company = Company.objects.create(name='example', created_at=timezone.now(), email='example@gmail.com',
-                                              website='https://www.example.com', krs_code=1111111111,
-                                              nip_code=1111111111)
+        self.company = Company(name='example', created_at=timezone.now(), email='example@gmail.com',
+                               website='https://www.example.com', krs_code=1111111111,
+                               nip_code=1111111111)
 
     @mock.patch('company.models.Company.save')
     def test_company_creation_signal_triggered(self, mocked):
         """ tests if mocked was triggered"""
 
+        self.company.save()
+
         self.assertTrue(mocked.called)
         self.assertEqual(mocked.call_count, 1)
 
     @mock.patch('company.models.Company.save')
     def test_company_creation_signal_not_triggered(self, mocked):
-        """ tests if mocked was triggered when wrong krs_code was given"""
-
-        self.company.krs_code = ""
+        """ tests if signal was not triggered with bad parameters """
 
         try:
-            self.company.full_clean()
-        except ValidationError as e:
-            self.assertFalse(mocked.called)
-            self.assertEqual(mocked.call_count, 0)
+            with transaction.atomic():
+                self.company.nip_code = ''
+                self.company.full_clean()
+                self.company.save()
+        except Exception as e:
+            print(e)
+
+        self.assertFalse(mocked.called)
+        self.assertEqual(mocked.call_count, 0)
 
     def tearDown(self):
         Company.objects.all().delete()
 
 
-class CompanyContactPersonSignalTriggeredTestCase():
+class CompanyContactPersonSignalTriggeredTestCase(TestCase):
     """ tests if signal was properly triggered"""
 
     def setUp(self):
-        self.company_contact_person = CompanyContactPerson.objects.create(first_name='example', last_name='example',
-                                                                          email='example@example.com')
+        self.company_contact_person = CompanyContactPerson(first_name='example', last_name='example',
+                                                           email='example@example.com')
 
     @mock.patch('company.models.CompanyContactPerson.save')
     def test_company_creation_signal_triggered(self, mocked):
+        """ tests if singal was propely triggered """
+
+        self.company_contact_person.save()
 
         self.assertTrue(mocked.called)
         self.assertEqual(mocked.call_count, 1)
 
     @mock.patch('company.models.CompanyContactPerson.save')
     def test_company_creation_signal_not_triggered(self, mocked):
-        """ tests if mocked was triggered when wrong email was given"""
-
-        self.company_contact_person.email = ""
+        """ tests if singal was not triggered with wrong parameters """
 
         try:
-            self.company_contact_person.full_clean()
+            with transaction.atomic():
+                self.company_contact_person.email = ""
+                self.company_contact_person.full_clean()
+                self.company_contact_person.save()
         except ValidationError as e:
-            self.assertFalse(mocked.called)
-            self.assertEqual(mocked.call_count, 0)
+            print(e)
+
+        self.assertFalse(mocked.called)
+        self.assertEqual(mocked.call_count, 0)
 
     def tearDown(self):
         CompanyContactPerson.objects.all().delete()
 
+
+class CatchSignal:
+    def __init__(self, signal):
+        self.signal = signal
+        self.handler = mock.Mock()
+
+    def __enter__(self):
+        self.signal.connect(self.handler)
+        return self.handler
+
+    def __exit__(self, exc_type, exc_value, tb):
+        self.signal.disconnect(self.handler)
+
+
+class TestCompanyContentSignalTestCase(TestCase):
+    """ tests if signal was properly triggered with args"""
+
+    def setUp(self):
+        self.company = Company(name='example', created_at=timezone.now(), email='example@gmail.com',
+                               website='https://www.example.com', krs_code=1111111111,
+                               nip_code=1111111111)
+
+    def test_signal_with_arguments(self, **kwargs):
+        with CatchSignal(company_email_changed) as handler:
+            self.company.save()
+        handler.assert_called_once_with(
+            company=self.company,
+            sender=mock.ANY,
+            signal=company_email_changed
+
+        )
+
+    def tearDown(self):
+        Company.objects.all().delete()
+
+
+class TestCompanyContactPersonContentSignalTestCase(TestCase):
+    """ tests if signal was properly triggered with args"""
+
+    def setUp(self):
+        self.company_contact_person = CompanyContactPerson(first_name='example', last_name='example',
+                                                           email='example@example.com')
+
+    def test_signal_with_arguments(self, **kwargs):
+        with CatchSignal(company_contact_person_email_changed) as handler:
+            self.company_contact_person.save()
+        handler.assert_called_once_with(
+            company_contact_person=self.company_contact_person,
+            sender=mock.ANY,
+            signal=company_contact_person_email_changed
+        )
+
+    def tearDown(self):
+        CompanyContactPerson.objects.all().delete()
+
+
+class TestCompanySignalDeliveredTestCase(TestCase):
+    def setUp(self):
+        self.company = Company(name='example', created_at=timezone.now(), email='example@gmail.com',
+                               website='https://www.example.com', krs_code=1111111111,
+                               nip_code=1111111111)
+
+    def test_email_with_parameters(self):
+        """ tests if email contains proper parameters """
+
+        self.company.save()
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject,
+                         ' Powiadomienie o gromadzeniu danych osobowych firmy ' + self.company.name)
+
+    def tearDown(self):
+        Company.objects.all().delete()
+
+
+class TestCompanyContactPersonEmailSendTestCase(TestCase):
+    """ tests if email parameters are correct """
+
+    def setUp(self):
+        self.company_contact_person = CompanyContactPerson(first_name='example', last_name='example',
+                                                           email='example@example.com')
+
+    def test_email_with_parameters(self):
+        """ tests if email contains proper parameters """
+
+        self.company_contact_person.save()
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject,
+                         ' Powiadomienie o gromadzeniu danych osobowych uzytkownika ' + self.company_contact_person.first_name)
+
+    def tearDown(self):
+        CompanyContactPerson.objects.all().delete()
