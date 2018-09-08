@@ -1,32 +1,27 @@
 import base64
 
 from django.contrib.auth.models import Group, Permission
-from django.test import TestCase, Client
+from django.test import TestCase
 
 from authorization.models import User
 
 
-class BaseUserAccessAuthenticationTestCase(TestCase):
+class UserAccessAuthenticationTestCase(TestCase):
     """ base user test authentication via http """
 
     def setUp(self):
         self.credentials = base64.b64encode(b'email:password').decode("ascii")
         self.client.defaults['HTTP_AUTHORIZATION'] = 'Basic ' + self.credentials
 
-        self.user = User.objects.create_user(email='example@gmail.com', password='example')
+        self.user = User.objects.create_user(email='test@test.com', password='test')
         self.user.is_staff = True
 
     def test_authorized(self):
         """ tests if commissioned user can access """
 
-        group = Group(name="Redaktor")
-        group.save()
-
         can_add_company_permission = Permission.objects.get(name='Can add Firma')
-        group.permissions.add(can_add_company_permission)
-        group.save()
 
-        self.user.groups.add(group)
+        self.user.user_permissions.add(can_add_company_permission)
         self.user.save()
 
         self.client.force_login(self.user, backend=None)
@@ -65,10 +60,11 @@ class GroupTestCase(TestCase):
     """ test user group permissions """
 
     def setUp(self):
+        self.credentials = base64.b64encode(b'email:password').decode("ascii")
+        self.client.defaults['HTTP_AUTHORIZATION'] = 'Basic ' + self.credentials
         self.group = Group(name='test')
         self.group.save()
         self.group.permissions.add(Permission.objects.get(name='Can add Firma'))
-        self.client = Client()
         self.user = User.objects.create_user(email="test@example.com", password="test")
         self.user.is_staff = True
 
