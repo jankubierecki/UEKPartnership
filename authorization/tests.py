@@ -88,5 +88,5 @@ class GroupTestCase(TestCase):
         self.assertEqual(response.status_code, 403, u'user not in group should have not access')
 
     def tearDown(self):
-        self.user.delete()
-        self.group.delete()
+        Group.objects.all().delete()
+        User.objects.all().delete()

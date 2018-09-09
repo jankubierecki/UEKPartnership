@@ -7,8 +7,8 @@ from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.utils import timezone
 
-from company.models import Company, CompanyContactPerson
-from .signals import company_email_changed, company_contact_person_email_changed, send_mail_to_company
+from company.models import Company, CompanyContactPerson, EmailInformedUsers
+from .signals import company_email_changed, company_contact_person_email_changed
 
 from django.core import mail
 
@@ -21,22 +21,12 @@ class CompanyCreationTestCase(TestCase):
                                website='https://www.example.com', krs_code=1111111111,
                                nip_code=1111111111)
 
-    def test_company_created_raises_validation_error(self):
-        """ tests if validation error works correctly """
-
-        self.assertRaises(ValidationError, self.company.full_clean())
-
     def test_company_created(self):
         """ tests if company was created correctly with proper arguments"""
 
         self.company.save()
 
         self.assertIsNotNone(Company.objects.get(id=self.company.id))
-
-    def test_company_not_created_without_save(self):
-        """ tests if company was not created """
-
-        self.assertRaises(ObjectDoesNotExist, self.company.full_clean())
 
     def test_company_not_created_without_argument(self):
         """ tests if creation fails when argument is not provided"""
@@ -273,9 +263,9 @@ class TestCompanyContactPersonContentSignalTestCase(TestCase):
         CompanyContactPerson.objects.all().delete()
 
 
-class TestCompanySignalDeliveredTestCase(TestCase):
+class TestCompanyEmailSendTestCase(TestCase):
     def setUp(self):
-        self.company = Company(name='example', created_at=timezone.now(), email='example@gmail.com',
+        self.company = Company(name='example', created_at=timezone.now(), email='example@example.com',
                                website='https://www.example.com', krs_code=1111111111,
                                nip_code=1111111111)
 
@@ -288,6 +278,28 @@ class TestCompanySignalDeliveredTestCase(TestCase):
         self.assertEqual(mail.outbox[0].subject,
                          ' Powiadomienie o gromadzeniu danych osobowych firmy ' + self.company.name)
 
+    def test_company_informed(self):
+        """ tests if company is in the EmailInformedUsers list """
+
+        self.company.save()
+
+        informed = EmailInformedUsers.objects.get(email='example@example.com')
+        self.assertIsNotNone(informed)
+
+    def test_company_not_informed(self):
+        """ tests if company has not been added twice to EmailInformedUsers list """
+
+        self.company.save()
+
+        Company.objects.create(name='example2', created_at=timezone.now(),
+                               email='example@example.com',
+                               website='https://www.example.com', krs_code=1111111111,
+                               nip_code=1111111111)
+
+        informed_users = EmailInformedUsers.objects.filter(email__icontains='example').count()
+
+        self.assertEquals(informed_users, 1)
+
     def tearDown(self):
         Company.objects.all().delete()
 
@@ -298,6 +310,26 @@ class TestCompanyContactPersonEmailSendTestCase(TestCase):
     def setUp(self):
         self.company_contact_person = CompanyContactPerson(first_name='example', last_name='example',
                                                            email='example@example.com')
+
+    def test_company_contact_person_informed(self):
+        """ tests if company is in the EmailInformedUsers list """
+
+        self.company_contact_person.save()
+
+        informed = EmailInformedUsers.objects.get(email='example@example.com')
+        self.assertIsNotNone(informed)
+
+    def test_company_contact_person_not_informed(self):
+        """ tests if company has not been added twice to EmailInformedUsers list """
+
+        self.company_contact_person.save()
+
+        self.company_contact_person = CompanyContactPerson(first_name='example', last_name='example',
+                                                           email='example@example.com')
+
+        informed_users = EmailInformedUsers.objects.filter(email__icontains='example').count()
+
+        self.assertEquals(informed_users, 1)
 
     def test_email_with_parameters(self):
         """ tests if email contains proper parameters """
