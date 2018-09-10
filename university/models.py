@@ -54,3 +54,4 @@ class InstituteUnitToUniversityContactPerson(models.Model):
         verbose_name = "Przypisana osoba"
         verbose_name_plural = "Przypisane osoby"
         ordering = ["-created_at"]
+        unique_together = ('institute_unit', 'university_contact_person')
