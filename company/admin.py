@@ -40,7 +40,8 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
         ("Informacje podstawowe", {'fields': ['name', 'phone', 'website', 'email']}),
         ("Dane do kontaktu", {'fields': [('city', 'street', 'zip_code')]}),
         ("O Firmie",
-         {'fields': ['industry', 'krs_code', 'nip_code', 'created_at', 'updated_at', 'privacy_email_date_send']})
+         {'fields': ['industry', 'krs_code', 'nip_code', 'created_at', 'updated_at', 'additional_info',
+                     'privacy_email_date_send']})
 
     )
     readonly_fields = ["created_at", "updated_at", 'privacy_email_date_send']

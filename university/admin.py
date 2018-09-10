@@ -31,7 +31,7 @@ class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = ["name", "created_at", "updated_at"]
     search_fields = ["name"]
     list_filter = ["created_at", "updated_at"]
-    fields = ["name", "created_at", "updated_at"]
+    fields = ["name", "additional_info", "created_at", "updated_at"]
     readonly_fields = ["created_at", "updated_at"]
     filter_horizontal = ['university_contact_persons']
     inlines = [InstituteUnitToUniversityContactPersonInlineAdmin]
