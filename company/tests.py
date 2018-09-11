@@ -1,6 +1,5 @@
 from django.db import transaction
 from django.test import TestCase
-from django.core.exceptions import ObjectDoesNotExist
 from unittest import mock
 
 from django.core.exceptions import ValidationError
