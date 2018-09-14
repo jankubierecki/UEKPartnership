@@ -195,3 +195,5 @@ LOGIN_URL = '/login/'
 AUTH_USER_MODEL = 'authorization.User'
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
+
+MAIL_NOTIFICATIONS = False

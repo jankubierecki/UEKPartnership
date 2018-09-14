@@ -5,7 +5,8 @@ from . import validators
 
 
 class Company(models.Model):
-    name = models.CharField("Nazwa", max_length=255)
+    name = models.CharField("Nazwa", max_length=255,
+                            help_text="Po prawej stronie pokażą się firmy o podobnej nazwie, które są już w systemie")
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     email = models.CharField("Email do firmy", max_length=50, default=" ", validators=[validators.validate_email])
@@ -37,10 +38,10 @@ class Company(models.Model):
         return self.email != Company.objects.filter(id=self.id).values_list('email', flat=True)[0]
 
     def save(self, *args, **kwargs):
-        # should_notify = self.id is None or self.email_has_changed()
+        should_notify = self.id is None or self.email_has_changed()
         super(Company, self).save(*args, **kwargs)
-        # if should_notify:
-        #     company_email_changed.send(sender=Company, company=self)
+        if should_notify:
+            company_email_changed.send(sender=Company, company=self)
 
 
 class CompanyContactPerson(models.Model):
@@ -65,10 +66,10 @@ class CompanyContactPerson(models.Model):
         return self.email != CompanyContactPerson.objects.filter(id=self.id).values_list('email', flat=True)[0]
 
     def save(self, *args, **kwargs):
-        # should_notify = self.id is None or self.email_has_changed()
+        should_notify = self.id is None or self.email_has_changed()
         super(CompanyContactPerson, self).save(*args, **kwargs)
-        # if should_notify:
-        #     company_contact_person_email_changed.send(sender=CompanyContactPerson, company_contact_person=self)
+        if should_notify:
+            company_contact_person_email_changed.send(sender=CompanyContactPerson, company_contact_person=self)
 
 
 class CompanyToCompanyContactPerson(models.Model):

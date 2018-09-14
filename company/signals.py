@@ -35,7 +35,7 @@ def send_mail_to_company_contact_person(sender, **kwargs):
 
 
 def get_recipient(email):
-    return email if not settings.DEBUG else settings.EMAIL_HOST_USER
+    return email if settings.MAIL_NOTIFICATIONS else settings.EMAIL_HOST_USER
 
 
 def mail_company(email, company_name, now):
