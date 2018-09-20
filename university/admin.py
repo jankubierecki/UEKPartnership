@@ -27,7 +27,8 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
 
 @admin.register(InstituteUnit)
 class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    change_list_template = "admin/institute_unit_change_list.html"
+    # change_list_template = "admin/institute_unit_change_list.html"
+    change_form_template = "admin/institute_unit_change_form.html"
     list_display = ["name", "created_at", "updated_at"]
     search_fields = ["name"]
     list_filter = ["created_at", "updated_at"]

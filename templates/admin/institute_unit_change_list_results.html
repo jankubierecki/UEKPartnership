@@ -67,7 +67,7 @@
 
                                         <tr>
                                             <td>
-                                                <a href="{% url "admin:partnerships_partnership_change" contract.partnership.id %}">{{ contract.partnership.name }}</a>
+                                                <a href="{% url "admin:partnerships_partnership_change" partnership.contracts.get().all() %}">{{ partnership.contracts.name }}</a>
                                             </td>
                                             <td>{{ contract.contract_number }}</td>
                                             <td>{{ contract.partnership.contract_date }}</td>

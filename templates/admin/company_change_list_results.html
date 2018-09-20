@@ -49,9 +49,6 @@
                                         <div class="text"><a>Nazwa współpracy</a></div>
                                     </th>
                                     <th scope="col">
-                                        <div class="text"><a>Numer umowy</a></div>
-                                    </th>
-                                    <th scope="col">
                                         <div class="text"><a>Data zawarcia umowy</a></div>
                                     </th>
                                     <th scope="col">
@@ -69,8 +66,7 @@
                                             <td>
                                                 <a href="{% url "admin:partnerships_partnership_change" contract.partnership.id %}">{{ contract.partnership.name }}</a>
                                             </td>
-                                            <td>{{ contract.contract_number }}</td>
-                                            <td>{{ contract.partnership.contract_date }}</td>
+                                            <td>{{ contract.partnership.start_date }}</td>
                                             <td>{{ contract.partnership.last_contact_date }}</td>
                                             <td>
                                                 <a href="{% url "admin:university_instituteunit_change" contract.institute_unit.id %}">{{ contract.institute_unit }}</a>
@@ -78,15 +74,15 @@
 
                                         </tr>
                                     {% endfor %}
-                                    {% with company.contracts.count as count  %}
-                                    {% if count > 5 %}
-                                        <tr>
-                                            <td colspan="5">
-                                                <a href="{% url "admin:partnerships_partnership_changelist" %}?contract__company__id__exact={{ company.id }}">Wszystkie
-                                                    współprace tej firmy ( {{ count }} )</a>
-                                            </td>
-                                        </tr>
-                                    {% endif %}
+                                    {% with company.contracts.count as count %}
+                                        {% if count > 5 %}
+                                            <tr>
+                                                <td colspan="5">
+                                                    <a href="{% url "admin:partnerships_partnership_changelist" %}?contract__company__id__exact={{ company.id }}">Wszystkie
+                                                        współprace tej firmy ( {{ count }} )</a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                     {% endwith %}
                                     </tbody>
                                 </table>

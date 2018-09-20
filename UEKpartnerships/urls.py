@@ -15,16 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.urls import path
+from django.urls import path, include
 
 from partnerships.views import ErrorEmailTest
-from university.views import PartnershipAutocomplete, CompanyAutocomplete
+from university.views import PartnershipAutocomplete, CompanyAutocomplete, InstituteUnitAutocomplete
 
 urlpatterns = [
     path('partnership_autocomplete/', login_required(PartnershipAutocomplete.as_view())),
     path('company_autocomplete/', login_required(CompanyAutocomplete.as_view())),
+    path('institute_unit_autocomplete/', login_required(InstituteUnitAutocomplete.as_view())),
     path('', admin.site.urls),
-    path('test500/', login_required(ErrorEmailTest.as_view()))
+    path('test500/', login_required(ErrorEmailTest.as_view())),
+    path(r'nested_admin/', include('nested_admin.urls')),
 
 ]
 admin.site.site_header = "Współprace Biznesowe UEK"

@@ -4,7 +4,8 @@ from . import validators
 
 
 class InstituteUnit(models.Model):
-    name = models.CharField("Nazwa", max_length=255)
+    name = models.CharField("Nazwa", max_length=255,
+                            help_text="Po prawej stronie pokażą się jednostki o podobnej nazwie, które są już w systemie")
     additional_info = models.TextField("Dodatkowe Informacje", null=True, blank=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)

@@ -1,8 +1,13 @@
 (function ($) {
-    let company_id = "#id_contract-0-company";
-    let institute_unit_id = "#id_contract-0-institute_unit";
-    let university_contact_person_id = "#id_university_contact_person";
-    let company_contact_person_id = "#id_company_contact_person";
+
+    //todo change this
+
+    let contract_id;
+    let set_id;
+    let company_id = "#id_contracts-" + contract_id + "-company";
+    let institute_unit_id = "#id_contracts-" + contract_id + "-institute_unit";
+    let university_contact_person_id = "#id_contracts-" + contract_id + "-contracttuuniversitycontactperson_set-" + set_id + "-university_contact_person";
+    let company_contact_person_id = "#id_contracts-" + contract_id + "-contracttocompanycontactperson_set-" + set_id + "-company_contact_person";
     let company_value;
     let institute_unit_value;
 
@@ -40,17 +45,12 @@
     }
 
     $(function () {
+
+
         company_value = {currentValue: $(company_id).val()};
         institute_unit_value = {currentValue: $(institute_unit_id).val()};
 
-        //update fields
         update_select(company_id, company_contact_person_id, company_value);
         update_select(institute_unit_id, university_contact_person_id, institute_unit_value);
     })
 }(django.jQuery));
-
-
-
-
-
-

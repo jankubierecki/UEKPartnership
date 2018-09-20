@@ -21,8 +21,7 @@ class Company(models.Model):
     krs_code = models.CharField("Numer KRS", max_length=10, validators=[validators.validate_krs])
     nip_code = models.CharField("Numer NIP", max_length=10, default=" ", validators=[validators.validate_nip])
     additional_info = models.TextField("Dodatkowe Informacje", null=True, blank=True)
-    company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson",
-                                                     related_name="companies")
+    company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson")
     privacy_email_date_send = models.DateTimeField("Data powiadomienia o przetwarzaniu danych", null=True,
                                                    blank=True)
 
@@ -75,7 +74,8 @@ class CompanyContactPerson(models.Model):
 class CompanyToCompanyContactPerson(models.Model):
     company = models.ForeignKey(Company, verbose_name="Firma", on_delete=models.CASCADE)
     company_contact_person = models.ForeignKey(CompanyContactPerson, on_delete=models.CASCADE,
-                                               verbose_name="Osoba do kontaktu Firmy współpracującej")
+                                               verbose_name="Osoba do kontaktu Firmy współpracującej",
+                                               related_name="companies")
 
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
 
@@ -88,6 +88,7 @@ class CompanyToCompanyContactPerson(models.Model):
         verbose_name = "Przypisana osoba"
         verbose_name_plural = "Przypisane osoby"
         ordering = ["-created_at"]
+        unique_together = ("company", "company_contact_person")
 
 
 class EmailInformedUsers(models.Model):

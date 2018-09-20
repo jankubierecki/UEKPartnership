@@ -6,9 +6,9 @@
         <script type="text/javascript" src="{% static "admin/js/jsi18n.js" %}"></script>
         {{ block.super }}
         {{ media.js }}
-        <script type="text/javascript">COMPANY_ID = '{{ adminform.form.instance.id }}'</script>
+        <script type="text/javascript">INSTITUTEUNIT_ID = '{{ adminform.form.instance.id }}'</script>
         <script type="text/javascript" src="{% static "university/js/bind_with_delay.js" %}"></script>
-        <script type="text/javascript" src="{% static "university/js/company_autocomplete.js" %}"></script>
+        <script type="text/javascript" src="{% static "university/js/institute_unit_autocomplete.js" %}"></script>
 
     {% endcompress %}
 {% endblock %}
@@ -102,7 +102,7 @@
                     {% endcompress %}
                 {% endblock %}
 
-                 JavaScript for prepopulated fields
+                {# JavaScript for prepopulated fields #}
                 {% prepopulated_fields_js %}
 
             </div>

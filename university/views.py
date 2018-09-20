@@ -6,6 +6,7 @@ from django.views import View
 
 from company.models import Company
 from partnerships.models import Partnership
+from university.models import InstituteUnit
 
 
 class BaseAutocomplete(AutocompleteJsonView):
@@ -83,3 +84,26 @@ class CompanyAutocomplete(View):
             company["url"] = reverse("admin:company_company_change", args=[company.get("id")])
 
         return JsonResponse(companies, safe=False, )
+
+
+class InstituteUnitAutocomplete(View):
+    def get_queryset(self, request, q):
+        institute_unit_id = request.GET.get("id")
+        if institute_unit_id is not None:
+            return InstituteUnit.objects.filter(q).exclude(id=institute_unit_id).distinct().values("name", "id")[:5]
+        else:
+            return InstituteUnit.objects.filter(q).distinct().values("name", "id")[:5]
+
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get("term")
+        if query is None or len(query) < 3:
+            return JsonResponse([], safe=False)
+        split_query = query.split(" ")
+        q = Q()
+        for term in split_query:
+            q |= Q(name__icontains=term)
+        institute_units = list(self.get_queryset(request, q))
+        for institute_unit in institute_units:
+            institute_unit["url"] = reverse("admin:university_instituteunit_change", args=[institute_unit.get("id")])
+
+        return JsonResponse(institute_units, safe=False, )
