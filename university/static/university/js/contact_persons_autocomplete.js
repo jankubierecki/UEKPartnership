@@ -22,8 +22,8 @@
         });
         $(source_id).on('change', function (e) {
             source_val["currentValue"] = e.currentTarget.value;
-            $(target_id).prop("disabled", false);
-            $(target_id).val(null).trigger('change');
+            // $(target_id).prop("disabled", false);
+            // $(target_id).val(null).trigger('change');
         });
 
         $(target_id).select2('destroy');
