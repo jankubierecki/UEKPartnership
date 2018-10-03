@@ -1,15 +1,6 @@
 (function ($) {
-
-    //todo change this
-
-    let contract_id;
-    let set_id;
-    let company_id = "#id_contracts-" + contract_id + "-company";
-    let institute_unit_id = "#id_contracts-" + contract_id + "-institute_unit";
-    let university_contact_person_id = "#id_contracts-" + contract_id + "-contracttuuniversitycontactperson_set-" + set_id + "-university_contact_person";
-    let company_contact_person_id = "#id_contracts-" + contract_id + "-contracttocompanycontactperson_set-" + set_id + "-company_contact_person";
+    let company_id = "#id_company";
     let company_value;
-    let institute_unit_value;
 
     function update_select(source_id, target_id, source_val) {
         if (source_val["currentValue"] == null) {
@@ -22,11 +13,15 @@
         });
         $(source_id).on('change', function (e) {
             source_val["currentValue"] = e.currentTarget.value;
-            // $(target_id).prop("disabled", false);
-            // $(target_id).val(null).trigger('change');
+            $(target_id).prop("disabled", false);
+            $(target_id).val(null).trigger('change');
         });
 
-        $(target_id).select2('destroy');
+        try {
+            $(target_id).select2('destroy');
+        } catch (e) {
+
+        }
         $(target_id).djangoAdminSelect2({
             ajax: {
                 data: function (params) {
@@ -44,13 +39,55 @@
 
     }
 
+    function onElementInserted(containerSelector, elementSelector, callback) {
+
+        var onMutationsObserved = function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.addedNodes.length) {
+                    var elements = $(mutation.addedNodes).find(elementSelector);
+                    for (var i = 0, len = elements.length; i < len; i++) {
+                        callback(elements[i]);
+                    }
+                }
+            });
+        };
+
+        var target = $(containerSelector)[0];
+        var config = {childList: true, subtree: true};
+        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+        var observer = new MutationObserver(onMutationsObserved);
+        observer.observe(target, config);
+
+    }
+
     $(function () {
-
-
         company_value = {currentValue: $(company_id).val()};
-        institute_unit_value = {currentValue: $(institute_unit_id).val()};
 
-        update_select(company_id, company_contact_person_id, company_value);
-        update_select(institute_unit_id, university_contact_person_id, institute_unit_value);
+        //update fields
+        $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
+            update_select(company_id, this, company_value)
+        })
+        onElementInserted("body", ".field-company_contact_persons select.select2-hidden-accessible", function () {
+            $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
+                update_select(company_id, this, company_value)
+            })
+        })
+
+
+        $(".field-university_contact_persons select.select2-hidden-accessible").each(function () {
+            let institute_id = $(this).closest(".dynamic-contracts").find(".field-institute_unit select")
+            let institute_unit_value = {currentValue: $(institute_id).val()};
+            update_select(institute_id, this, institute_unit_value)
+        })
+
+        onElementInserted("body", ".field-university_contact_persons select.select2-hidden-accessible", function () {
+            $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
+                let institute_id = $(this).closest(".dynamic-contracts").find(".field-institute_unit select")
+                let institute_unit_value = {currentValue: $(institute_id).val()};
+                update_select(institute_id, this, institute_unit_value)
+            })
+        })
+
+
     })
 }(django.jQuery));

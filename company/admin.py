@@ -61,8 +61,7 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_website_url.short_description = 'Strona Internetowa'
 
     def get_queryset(self, request):
-        return Company.objects.prefetch_related("contracts", "contracts__institute_unit",
-                                                "contracts__partnership").all()
+        return Company.objects.prefetch_related("partnerships").all()
 
 
 @admin.register(CompanyContactPerson)
@@ -71,7 +70,7 @@ class CompanyContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     fields = ["first_name", "last_name", "phone", "email", "created_at", "updated_at", 'privacy_email_date_send']
     list_filter = ["created_at", "updated_at"]
     readonly_fields = ["created_at", "updated_at", 'privacy_email_date_send']
-    search_fields = ["first_name", "last_name", "phone", "companies__name"]
+    search_fields = ["first_name", "last_name", "phone", "company__name"]
     inlines = [CompanyContactPersonToCompanyInlineAdmin]
 
     def get_email_url(self, obj: CompanyContactPerson):

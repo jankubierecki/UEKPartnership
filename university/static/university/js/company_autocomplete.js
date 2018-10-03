@@ -9,7 +9,7 @@
                 url = "/company_autocomplete/?term=" + e.currentTarget.value + "&id=" + COMPANY_ID;
             }
             $.get(url, function (data) {
-                let html = "<ul style='padding-left:30%;'>";
+                let html = "<ul>";
                 for (let company of data) {
                     let name = company["name"];
                     let url = company["url"];

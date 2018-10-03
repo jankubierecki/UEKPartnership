@@ -13,30 +13,7 @@ import nested_admin
 
 from common.admin import ReadOnlyModelAdmin
 
-from partnerships.models import Partnership, Contract, PartnershipLogEntry, ContractToCompanyContactPerson, \
-    ContractToUniversityContactPerson
-
-
-class ContractToCompanyContactPersonInlineAdmin(nested_admin.NestedStackedInline):
-    model = ContractToCompanyContactPerson
-    extra = 0
-    min_num = 1
-    verbose_name_plural = "Przypisane osoby do kontaktu od strony firmy współpracującej"
-    verbose_name = " osoby firmy"
-    fields = ['company_contact_person', 'created_at']
-    readonly_fields = ['created_at']
-    autocomplete_fields = ['company_contact_person']
-
-
-class ContractToUniversityContactPersonInlineAdmin(nested_admin.NestedStackedInline):
-    model = ContractToUniversityContactPerson
-    extra = 0
-    min_num = 1
-    verbose_name_plural = "Przypisane osoby do kontaktu od strony UEK"
-    verbose_name = "osoby Uczelni"
-    fields = ['university_contact_person', 'created_at']
-    readonly_fields = ['created_at']
-    autocomplete_fields = ['university_contact_person']
+from partnerships.models import Partnership, Contract, PartnershipLogEntry
 
 
 class ContractInlineForm(django.forms.ModelForm):
@@ -47,42 +24,42 @@ class ContractInlineForm(django.forms.ModelForm):
         fields = ['contract_date']
 
     def clean(self):
-        contract_date = self.cleaned_data['contract_date']
+        contract_date = self.cleaned_data.get('contract_date')
         partnership_start_date = self.cleaned_data['partnership'].start_date
         partnership_last_contact_date = self.cleaned_data['partnership'].last_contact_date
         today = datetime.date.today()
 
         if partnership_last_contact_date is not None and partnership_start_date is not None:
 
-            if partnership_start_date > contract_date:
-                raise ValidationError('Data zawiązania umowy nie może być starsza od daty rozpoczęcia współpracy')
+            if contract_date is not None:
+                if partnership_start_date > contract_date:
+                    raise ValidationError('Data zawiązania umowy nie może być starsza od daty rozpoczęcia współpracy')
 
-            if partnership_last_contact_date < contract_date:
-                raise ValidationError(
-                    'Zaktualizuj także datę ostatniego kontaktu współpracy - data zawiązania umowy może być mniejsza lub równa tej dacie.')
+                if partnership_last_contact_date < contract_date:
+                    raise ValidationError(
+                        'Zaktualizuj także datę ostatniego kontaktu współpracy - data zawiązania umowy może być mniejsza lub równa tej dacie.')
 
-            if contract_date > today:
-                raise ValidationError('Data zawiązania umowy nie może być z przyszłości')
+                if contract_date > today:
+                    raise ValidationError('Data zawiązania umowy nie może być z przyszłości')
         else:
             return
 
         return self.cleaned_data
 
 
-class ContractInlineAdmin(ReadOnlyModelAdmin, nested_admin.NestedStackedInline):
+class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
     model = Contract
     extra = 0
     min_num = 0
     can_delete = False
-    fields = ['partnership', 'company', 'institute_unit',
+    fields = ['partnership', 'institute_unit',
               'contract_date', 'contract_number', 'amount_pay',
-              'additional_info']
-    autocomplete_fields = ["institute_unit", "company"]
-    inlines = [ContractToCompanyContactPersonInlineAdmin, ContractToUniversityContactPersonInlineAdmin]
+              'additional_info', 'company_contact_persons', 'university_contact_persons']
+    autocomplete_fields = ["institute_unit", 'company_contact_persons', 'university_contact_persons']
     form = ContractInlineForm
 
 
-class PartnershipLogEntryInlineAdmin(ReadOnlyModelAdmin, nested_admin.NestedTabularInline):
+class PartnershipLogEntryInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):
     model = PartnershipLogEntry
     extra = 1
     can_delete = False
@@ -127,7 +104,7 @@ class PartnershipModelForm(django.forms.ModelForm):
 
 
 @admin.register(Partnership)
-class PartnershipAdmin(ReadOnlyModelAdmin, nested_admin.NestedModelAdmin):
+class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     inlines = [ContractInlineAdmin, PartnershipLogEntryInlineAdmin]
     form = PartnershipModelForm
     change_form_template = "admin/partnership_change_form.html"
@@ -135,12 +112,12 @@ class PartnershipAdmin(ReadOnlyModelAdmin, nested_admin.NestedModelAdmin):
                      'contracts__institute_unit__name',
                      'contracts__university_contact_persons__last_name',
                      'contracts__company_contact_persons__first_name',
-                     'contracts__company_contact_persons__last_name', 'contracts__company__name', 'name']
+                     'contracts__company_contact_persons__last_name', 'company', 'name']
     list_display = ['name', 'get_company_name',
                     'get_institute_unit_name', 'get_company_contact_persons', 'get_university_contact_persons',
                     'start_date', 'last_contact_date',
                     'get_status_with_color']
-    fields = ['name', 'start_date', 'last_contact_date',
+    fields = ['name', 'company', 'start_date', 'last_contact_date',
               'kind_of_partnership', 'type_of_partnership', 'status', 'author']
 
     readonly_fields = ['author']
@@ -152,9 +129,11 @@ class PartnershipAdmin(ReadOnlyModelAdmin, nested_admin.NestedModelAdmin):
         'other': '<div style="width:100%%; height:100%%; color:purple;">%s</div>',
     }
 
+    autocomplete_fields = ['company']
+
     list_filter = (
         ('start_date', DateFieldListFilter),
-        ('contracts__company', RelatedDropdownFilter),
+        ('company', RelatedDropdownFilter),
         ('type_of_partnership', ChoicesFieldListFilter),
         ('kind_of_partnership', ChoicesFieldListFilter),
         ('status', ChoicesFieldListFilter),
@@ -189,12 +168,10 @@ class PartnershipAdmin(ReadOnlyModelAdmin, nested_admin.NestedModelAdmin):
     get_author_name.short_description = "Autor"
 
     def get_company_name(self, obj: Partnership):
-        if obj.contracts.filter(partnership=obj.pk).count() == 0:
-            return "brak"
         return mark_safe(
             '<a href="{}">{}</a>'.format(
-                reverse("admin:company_company_change", args=(obj.contracts.all()[:1].get().company.pk,)),
-                obj.contracts.all()[:1].get().company.name))
+                reverse("admin:company_company_change", args=(obj.company.pk,)),
+                obj.company.name))
 
     get_company_name.short_description = "Firma współpracująca"
 

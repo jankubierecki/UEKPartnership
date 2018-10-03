@@ -43,7 +43,7 @@ class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
         }
 
     def get_queryset(self, request):
-        return InstituteUnit.objects.prefetch_related("contracts", "contracts__company", "contracts__partnership").all()
+        return InstituteUnit.objects.prefetch_related("contracts__partnership__company").all()
 
 
 @admin.register(UniversityContactPerson)

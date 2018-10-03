@@ -9,7 +9,7 @@
                 url = "/institute_unit_autocomplete/?term=" + e.currentTarget.value + "&id=" + INSTITUTEUNIT_ID;
             }
             $.get(url, function (data) {
-                let html = "<ul style='padding-left:30%;'>";
+                let html = "<ul>";
                 for (let institute_unit of data) {
                     let name = institute_unit["name"];
                     let url = institute_unit["url"];
