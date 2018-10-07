@@ -12,7 +12,8 @@ class InstituteUnitToUniversityContactPersonInlineAdmin(ReadOnlyModelAdmin, admi
     model = InstituteUnitToUniversityContactPerson
     extra = 0
     min_num = 1
-    verbose_name_plural = "Przypisane osoby"
+    verbose_name_plural = "przypisane osoby"
+    verbose_name = " osoby"
     fields = ['university_contact_person', 'created_at']
     readonly_fields = ['created_at']
     autocomplete_fields = ["university_contact_person"]
@@ -23,6 +24,7 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
     min_num = 0
     fields = ['institute_unit', 'created_at']
     verbose_name_plural = "Przypisane jednostki współpracujące UEK"
+    verbose_name = "Przypisz tej osobie kolejną jednostkę UEK"
     autocomplete_fields = ['institute_unit']
 
 
