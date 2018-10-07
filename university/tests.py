@@ -60,22 +60,6 @@ class UniversityContactPersonTestCase(TestCase):
         self.assertEqual(UniversityContactPerson.objects.get(pk=self.university_contact_person.pk),
                          self.university_contact_person)
 
-    def test_university_contact_person_not_created(self):
-        """ tests validation """
-
-        # Given
-        self.university_contact_person.email = 'test@test.com'
-
-        # When
-        try:
-            self.university_contact_person.full_clean()
-        # Then
-        except ValidationError as e:
-            self.assertTrue('email' in e.message_dict)
-        else:
-            print("wrong email passed the test ", self.university_contact_person.email)
-            self.assertTrue(1 == 0)
-
 
 class InstituteUnitToUniversityContactPersonTestCase(TestCase):
 
