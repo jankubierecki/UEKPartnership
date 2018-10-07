@@ -19,7 +19,7 @@ class Company(models.Model):
     industry = models.CharField("Branża", max_length=64, blank=True)
     company_size = models.CharField("Wielkość firmy", max_length=64, blank=True)
     krs_code = models.CharField("Numer KRS", max_length=10, validators=[validators.validate_krs])
-    nip_code = models.CharField("Numer NIP", max_length=10, default=" ", validators=[validators.validate_nip])
+    nip_code = models.CharField("Numer NIP", max_length=10, validators=[validators.validate_nip])
     additional_info = models.TextField("Dodatkowe Informacje", null=True, blank=True)
     company_contact_persons = models.ManyToManyField("CompanyContactPerson", through="CompanyToCompanyContactPerson")
     privacy_email_date_send = models.DateTimeField("Data powiadomienia o przetwarzaniu danych", null=True,

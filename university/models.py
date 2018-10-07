@@ -5,7 +5,7 @@ from . import validators
 
 class InstituteUnit(models.Model):
     name = models.CharField("Nazwa", max_length=255,
-                            help_text="Po prawej stronie pokażą się jednostki o podobnej nazwie, które są już w systemie")
+                            help_text="Pod spodem pokażą się jednostki o podobnej nazwie, które są już w systemie")
     additional_info = models.TextField("Dodatkowe Informacje", null=True, blank=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
@@ -25,8 +25,7 @@ class UniversityContactPerson(models.Model):
     first_name = models.CharField("Imię", max_length=255)
     last_name = models.CharField("Nazwisko", max_length=255)
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
-    email = models.EmailField("Email", max_length=50,
-                              validators=[validators.email_validation], help_text="Tylko z domeną UEK")
+    email = models.EmailField("Email", max_length=50)
     academic_title = models.CharField("Tytuł naukowy", max_length=50, blank=True, null=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     updated_at = models.DateTimeField("Zaktualizowano", auto_now=True)
@@ -53,7 +52,7 @@ class InstituteUnitToUniversityContactPerson(models.Model):
             self.university_contact_person.last_name)
 
     class Meta:
-        verbose_name = "Przypisana osoba"
-        verbose_name_plural = "Przypisane osoby"
+        verbose_name = "osoba / jednostka"
+        verbose_name_plural = "osoby / jednostki"
         ordering = ["-created_at"]
         unique_together = ('institute_unit', 'university_contact_person')

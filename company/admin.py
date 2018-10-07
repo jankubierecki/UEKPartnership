@@ -34,7 +34,7 @@ class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
                     "created_at", "updated_at"]
     search_fields = ["name", "city", "zip_code", "industry", "company_contact_persons__first_name",
                      "company_contact_persons__last_name"]
-    list_filter = ["created_at", "updated_at"]
+    list_filter = ["created_at", "updated_at", "city", "industry"]
 
     fieldsets = (
         ("Informacje podstawowe", {'fields': ['name', 'phone', 'website', 'email']}),
@@ -90,7 +90,7 @@ class CompanyContactPersonAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 @admin.register(EmailInformedUsers)
 class EmailInformedUsersAdmin(admin.ModelAdmin):
     list_display = ["email", "created_at"]
-    list_filter = list_display
+    list_filter = ["created_at"]
     readonly_fields = list_display
     search_fields = list_display
 

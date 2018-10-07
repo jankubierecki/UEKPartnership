@@ -23,11 +23,11 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
     min_num = 0
     fields = ['institute_unit', 'created_at']
     verbose_name_plural = "Przypisane jednostki współpracujące UEK"
+    autocomplete_fields = ['institute_unit']
 
 
 @admin.register(InstituteUnit)
 class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    # change_list_template = "admin/institute_unit_change_list.html"
     change_form_template = "admin/institute_unit_change_form.html"
     list_display = ["name", "created_at", "updated_at"]
     search_fields = ["name"]
