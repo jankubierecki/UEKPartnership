@@ -2,15 +2,12 @@ from datetime import timedelta
 from django.utils import timezone
 
 from django.test import TestCase
-from unittest import mock
 
 from django.core.exceptions import ObjectDoesNotExist
 
 from authorization.models import User
-from partnerships.models import Partnership, ContractToUniversityContactPerson, Contract
+from partnerships.models import Partnership
 from partnerships.admin import PartnershipModelForm
-from company.models import Company, CompanyContactPerson
-from university.models import InstituteUnit, UniversityContactPerson
 
 
 class BasePartnershipCreationTestCase(TestCase):
