@@ -1,6 +1,4 @@
-# UEKPartnership
-
-**Django-admin application which supports easy data management**
+# UEKPartnership 
 
 [![pipeline status](https://gitlab.com/jankubierecki/UEKPartnership/badges/master/pipeline.svg)](https://gitlab.com/jankubierecki/UEKPartnership/commits/master)
 [![coverage report](https://gitlab.com/jankubierecki/UEKPartnership/badges/master/coverage.svg)](https://gitlab.com/jankubierecki/UEKPartnership/commits/master)
@@ -26,4 +24,9 @@
 2. ```docker-compose up```
 3. ```python manage.py migrate```
 4. ```python manage.py createsuperuser```
+5. ```python manage.py runserver```
+6. ```go to localhost:8000```
 
+
+### Note
+under the development
