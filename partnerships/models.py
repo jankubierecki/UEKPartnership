@@ -25,9 +25,7 @@ class Partnership(models.Model):
 
     STATUS_OF_PARTNERSHIP = (
         ("finished", "Zakończona"),
-        ("paid_and_on", "Opłacona - w trakcie"),
-        ("started_not_paid", "Nieopłacona - w trakcie"),
-        ("other", "Inna")
+        ("unfinished", "W trakcie")
     )
 
     start_date = models.DateField("Data nawiązania Współpracy")
@@ -39,7 +37,7 @@ class Partnership(models.Model):
     kind_of_partnership = models.CharField("Rodzaj współpracy", max_length=255, choices=KINDS_OF_PARTNERSHIPS,
                                            default=KINDS_OF_PARTNERSHIPS[1][0])
     status = models.CharField("Status", max_length=255, choices=STATUS_OF_PARTNERSHIP,
-                              default=STATUS_OF_PARTNERSHIP[2][0])
+                              default=STATUS_OF_PARTNERSHIP[1][0])
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="partnerships",
                                 verbose_name="Firma")
     author = models.ForeignKey(get_user_model(), verbose_name="Autor",

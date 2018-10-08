@@ -124,9 +124,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     status_html = {
         'finished': '<div style="width:100%%; height:100%%; color:grey;">%s</div>',
-        'paid_and_on': '<div style="width:100%%; height:100%%; color:green;">%s</div>',
-        'started_not_paid': '<div style="width:100%%; height:100%%; color:red;">%s</div>',
-        'other': '<div style="width:100%%; height:100%%; color:purple;">%s</div>',
+        'unfinished': '<div style="width:100%%; height:100%%; color:green;">%s</div>',
     }
 
     autocomplete_fields = ['company']
