@@ -6,7 +6,7 @@ from . import validators
 
 class Company(models.Model):
     name = models.CharField("Nazwa", max_length=255,
-                            help_text="Po prawej stronie pokażą się firmy o podobnej nazwie, które są już w systemie")
+                            help_text="Pod spodem pokażą się firmy o podobnej nazwie, które są już w systemie")
     phone = models.CharField("Telefon", max_length=50, blank=True, null=True)
     created_at = models.DateTimeField("Utworzono", auto_now_add=True)
     email = models.CharField("Email do firmy", max_length=50, default=" ", validators=[validators.validate_email])

@@ -31,7 +31,7 @@ class Partnership(models.Model):
     start_date = models.DateField("Data nawiązania Współpracy")
     last_contact_date = models.DateField("Data ostatniego kontaktu")
     name = models.CharField("Nazwa współpracy", max_length=255,
-                            help_text="Po prawej stronie pokażą się współprace o podobnej nazwie, które są już w systemie")
+                            help_text="Pod spodem pokażą się współprace o podobnej nazwie, które są już w systemie")
     type_of_partnership = models.CharField("Typ współpracy", max_length=255, choices=TYPES_OF_PARTNERSHIPS,
                                            default=TYPES_OF_PARTNERSHIPS[1][0])
     kind_of_partnership = models.CharField("Rodzaj współpracy", max_length=255, choices=KINDS_OF_PARTNERSHIPS,
