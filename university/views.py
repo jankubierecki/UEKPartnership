@@ -35,7 +35,7 @@ class CompanyContactPersonAutocomplete(BaseAutocomplete):
         queryset = super(CompanyContactPersonAutocomplete, self).get_queryset()
         if self.parent_id is not None:
             return queryset.filter(
-                companies=self.parent_id
+                company=self.parent_id
             )
         return queryset
 

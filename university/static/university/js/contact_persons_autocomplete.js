@@ -1,6 +1,5 @@
 (function ($) {
     let company_id = "#id_company";
-    let company_value;
 
     function update_select(source_id, target_id, source_val) {
         if (source_val["currentValue"] == null) {
@@ -25,7 +24,6 @@
         $(target_id).djangoAdminSelect2({
             ajax: {
                 data: function (params) {
-
                     return {
                         term: params.term,
                         page: params.page,
@@ -61,13 +59,14 @@
     }
 
     $(function () {
-        company_value = {currentValue: $(company_id).val()};
 
-        //update fields
+        let company_value = {currentValue: $(company_id).val()};
+
         $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
             update_select(company_id, this, company_value)
         })
         onElementInserted("body", ".field-company_contact_persons select.select2-hidden-accessible", function () {
+            company_value = {currentValue: $(company_id).val()};
             $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
                 update_select(company_id, this, company_value)
             })
@@ -77,13 +76,15 @@
         $(".field-university_contact_persons select.select2-hidden-accessible").each(function () {
             let institute_id = $(this).closest(".dynamic-contracts").find(".field-institute_unit select")
             let institute_unit_value = {currentValue: $(institute_id).val()};
+
             update_select(institute_id, this, institute_unit_value)
         })
 
         onElementInserted("body", ".field-university_contact_persons select.select2-hidden-accessible", function () {
-            $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
+            $(".field-university_contact_persons select.select2-hidden-accessible").each(function () {
                 let institute_id = $(this).closest(".dynamic-contracts").find(".field-institute_unit select")
                 let institute_unit_value = {currentValue: $(institute_id).val()};
+
                 update_select(institute_id, this, institute_unit_value)
             })
         })
