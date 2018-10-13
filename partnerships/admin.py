@@ -52,6 +52,7 @@ class ContractInlineAdmin(ReadOnlyModelAdmin, admin.StackedInline):
               'additional_info', 'company_contact_persons', 'university_contact_persons']
     autocomplete_fields = ["institute_unit", 'company_contact_persons', 'university_contact_persons']
     form = ContractInlineForm
+    template = "admin/contract_stacked.html"
 
 
 class PartnershipLogEntryInlineAdmin(ReadOnlyModelAdmin, admin.TabularInline):

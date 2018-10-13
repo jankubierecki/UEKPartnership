@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django_admin_listfilter_dropdown',
     'admin_reorder',
     'compressor',
-    'nested_admin',
 ]
 
 MIDDLEWARE = [

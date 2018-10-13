@@ -1,5 +1,5 @@
 {% extends "admin/base.html" %}
-{% load staticfiles compress%}
+{% load staticfiles compress %}
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 {% block responsive %}
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -7,118 +7,135 @@
 
 {% block extrastyle %}
     {% compress css %}
-    {{ block.super }}
-    <style>
-        html, body, #container {
-            min-height: 100%;
-        }
+        {{ block.super }}
+        <style>
+            html, body, #container {
+                min-height: 100%;
+            }
 
-        html, body {
-            height: 100%;
-        }
+            html, body {
+                height: 100%;
+            }
 
-        a:link, a:visited {
-            color: #6b1c1c;
-        }
+            a:link, a:visited {
+                color: #6b1c1c;
+            }
 
-        #changelist-filter li.selected a {
-            color: #6b1c1c !important;
-        }
+            #changelist-filter li.selected a {
+                color: #6b1c1c !important;
+            }
 
-        .breadcrumbs {
-            color: white !important;
-        }
+            .breadcrumbs {
+                color: white !important;
+            }
 
-        .object-tools a:link, .object-tools a:visited {
-            background-color: rgba(76, 175, 80, 1) !important;
-        }
+            .object-tools a:link, .object-tools a:visited {
+                background-color: rgba(76, 175, 80, 1) !important;
+            }
 
-        #site-name a {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            margin-top: 10px;
+            #site-name a {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                margin-top: 10px;
 
-        }
+            }
 
-        #site-name a img {
-            width: 60px;
-            height: auto;
-            margin-right: 10px;
+            #site-name a img {
+                width: 60px;
+                height: auto;
+                margin-right: 10px;
 
-        }
+            }
 
-        #user-tools {
-            margin-top: 20px;
-            font-size: 110%
-        }
+            #user-tools {
+                margin-top: 20px;
+                font-size: 110%
+            }
 
-        #header {
-            height: auto;
-        }
+            #header {
+                height: auto;
+            }
 
-        #header, div.breadcrumbs, .module h2, .module caption, .inline-group h2 {
-            background: #6b1c1c;
-        }
+            #header, div.breadcrumbs, .module h2, .module caption, .inline-group h2 {
+                background: #6b1c1c;
+            }
 
-        .default {
-            background: #4caf50 !important;
-        }
+            .default {
+                background: #4caf50 !important;
+            }
 
-        .button, input[type=submit], input[type=button], .submit-row input, a.button {
-            background: rgba(76, 175, 80, 0.6);
-        }
+            .button, input[type=submit], input[type=button], .submit-row input, a.button {
+                background: rgba(76, 175, 80, 0.6);
+            }
 
-        .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
-            background: rgba(76, 175, 80, 1) !important;
-        }
+            .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+                background: rgba(76, 175, 80, 1) !important;
+            }
 
-        div.breadcrumbs {
-            border-top: 1px solid rgba(255, 255, 255, 0.16);
-        }
+            div.breadcrumbs {
+                border-top: 1px solid rgba(255, 255, 255, 0.16);
+            }
 
-        #branding h1 a, #user-tools, #user-tools a {
-            color: white !important;
-        }
+            #branding h1 a, #user-tools, #user-tools a {
+                color: white !important;
+            }
 
-        #container {
-            display: flex;
-            flex-direction: column;
-        }
+            #container {
+                display: flex;
+                flex-direction: column;
+            }
 
-        #container #content {
-            flex-grow: 1;
-        }
+            #container #content {
+                flex-grow: 1;
+            }
 
-        #footer {
-            padding: 20px 40px;
-        }
+            #footer {
+                padding: 20px 40px;
+            }
 
-        #footer div {
-            border-top: 1px solid #d9d9d9;
-        }
+            #footer div {
+                border-top: 1px solid #d9d9d9;
+            }
 
-        #footer h4 {
-            opacity: 0.5;
-            display: inline-block;
-        }
+            #footer h4 {
+                opacity: 0.5;
+                display: inline-block;
+            }
 
-        .login #footer {
-            display: none !important;
-        }
+            .login #footer {
+                display: none !important;
+            }
 
-        .login #container {
-            display: block !important;
-            height: auto !important;
-            min-height: auto !important;
-        }
+            .login #container {
+                display: block !important;
+                height: auto !important;
+                min-height: auto !important;
+            }
 
-        .login #content {
-            padding: 20px 20px !important;
-        }
-    </style>
-         <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}" />
-    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}" />{% endif %}
+            .login #content {
+                padding: 20px 20px !important;
+            }
+
+            .select2-selection__choice {
+                background: #6b1c1c !important;
+                color: white;
+                border: 0 !important;
+            }
+
+            .select2-selection__choice span {
+                color: white !important;
+            }
+
+            .select2-results__option--highlighted {
+                background: #6b1c1c !important;
+                color: white;
+                border: 0 !important;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}"/>
+        {% if LANGUAGE_BIDI %}
+            <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}"/>{% endif %}
     {% endcompress %}
 {% endblock %}
 {% block branding %}
@@ -133,10 +150,10 @@
     <div id="footer">
         <div>
             <a href="https://www.uek.krakow.pl/" target="_blank">
-            <h4>
-                UNIWERSYTET EKONOMICZNY
-                W KRAKOWIE
-            </h4>
+                <h4>
+                    UNIWERSYTET EKONOMICZNY
+                    W KRAKOWIE
+                </h4>
             </a>
             <h5 style="float:right;text-align:right;">
                 <a href="https://www.linkedin.com/in/kubierecki/" target="_blank">JAN KUBIERECKI</a>

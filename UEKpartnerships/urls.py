@@ -26,8 +26,6 @@ urlpatterns = [
     path('institute_unit_autocomplete/', login_required(InstituteUnitAutocomplete.as_view())),
     path('', admin.site.urls),
     path('test500/', login_required(ErrorEmailTest.as_view())),
-    path(r'nested_admin/', include('nested_admin.urls')),
-
 ]
 admin.site.site_header = "Współprace Biznesowe UEK"
 admin.site.site_title = "Współprace Biznesowe UEK"
