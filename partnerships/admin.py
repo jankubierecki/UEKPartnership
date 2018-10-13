@@ -9,8 +9,6 @@ from django.utils.safestring import mark_safe
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from django.db import models
 
-import nested_admin
-
 from common.admin import ReadOnlyModelAdmin
 
 from partnerships.models import Partnership, Contract, PartnershipLogEntry
@@ -27,20 +25,17 @@ class ContractInlineForm(django.forms.ModelForm):
         contract_date = self.cleaned_data.get('contract_date')
         partnership_start_date = self.cleaned_data['partnership'].start_date
         partnership_last_contact_date = self.cleaned_data['partnership'].last_contact_date
-        today = datetime.date.today()
 
         if partnership_last_contact_date is not None and partnership_start_date is not None:
 
             if contract_date is not None:
                 if partnership_start_date > contract_date:
-                    raise ValidationError('Data zawiązania umowy nie może być starsza od daty rozpoczęcia współpracy')
+                    raise ValidationError('Data zawiązania umowy nie może być starsza od daty rozpoczęcia współpracy.')
 
                 if partnership_last_contact_date < contract_date:
                     raise ValidationError(
                         'Zaktualizuj także datę ostatniego kontaktu współpracy - data zawiązania umowy może być mniejsza lub równa tej dacie.')
 
-                if contract_date > today:
-                    raise ValidationError('Data zawiązania umowy nie może być z przyszłości')
         else:
             return
 
@@ -75,7 +70,7 @@ class PartnershipModelForm(django.forms.ModelForm):
 
     class Meta:
         model = Partnership
-        fields = ['start_date', 'last_contact_date']
+        fields = ['start_date', 'last_contact_date', 'status']
 
     def clean(self):
 
@@ -83,6 +78,7 @@ class PartnershipModelForm(django.forms.ModelForm):
 
             start_date = self.cleaned_data['start_date']
             last_contact_date = self.cleaned_data['last_contact_date']
+            status = self.cleaned_data['status']
 
         except KeyError:
             return
@@ -90,15 +86,19 @@ class PartnershipModelForm(django.forms.ModelForm):
         current_date = datetime.date.today()
 
         if start_date > last_contact_date:
-            raise ValidationError('Data ostatniego kontaktu nie może być starsza od daty rozpoczęcia współpracy')
+            raise ValidationError('Data ostatniego kontaktu nie może być starsza od daty rozpoczęcia współpracy.')
 
-        if start_date < current_date < last_contact_date:
+        if start_date <= current_date < last_contact_date:
             raise ValidationError(
-                'Data ostaniego kontaktu nie może wybiegać w przyszłość jeśli data rozpoczęcia jest z przeszłości')
+                'Data ostaniego kontaktu nie może wybiegać w przyszłość jeśli data rozpoczęcia jest starsza lub równa dzisiejszej dacie.')
 
         if current_date < start_date != last_contact_date:
             raise ValidationError(
-                'Data ostatniego kontaktu musi być równa dacie rozpoczęcia współpracy jeśli obie są z przyszłości. Ustaw obie daty na ten sam dzień, lub z rezygnuj z przyszłościowych dat')
+                'Data ostatniego kontaktu musi być równa dacie rozpoczęcia współpracy jeśli obie są z przyszłości. Ustaw obie daty na ten sam dzień, lub z rezygnuj z przyszłościowych dat.')
+
+        if last_contact_date > current_date and status == 'finished':
+            raise ValidationError(
+                "Status współpracy 'zakończona' jest dopuszczalny tylko wtedy, gdy data rozpoczęcia i data ostatniego kontaktu są z przeszłości.")
 
         return self.cleaned_data
 
@@ -124,9 +124,7 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
     status_html = {
         'finished': '<div style="width:100%%; height:100%%; color:grey;">%s</div>',
-        'paid_and_on': '<div style="width:100%%; height:100%%; color:green;">%s</div>',
-        'started_not_paid': '<div style="width:100%%; height:100%%; color:red;">%s</div>',
-        'other': '<div style="width:100%%; height:100%%; color:purple;">%s</div>',
+        'unfinished': '<div style="width:100%%; height:100%%; color:green;">%s</div>',
     }
 
     autocomplete_fields = ['company']
@@ -187,47 +185,51 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     get_institute_unit_name.short_description = "Jednostka UEK"
 
     def get_university_contact_persons(self, obj: Partnership):
-        # todo write it better
 
         if obj.contracts.filter(partnership=obj.pk).count() == 0:
             return "brak"
 
         full_names = zip(obj.contracts.latest().university_contact_persons.all().values('first_name'),
-                         obj.contracts.latest().university_contact_persons.all().values('last_name'))
-
+                         obj.contracts.latest().university_contact_persons.all().values('last_name'),
+                         obj.contracts.latest().university_contact_persons.all().values('id')
+                         )
         html = ""
+        index = 1
 
-        for first_name, last_name in full_names:
-            html += "- " + mark_safe(
+        for first_name, last_name, ids in full_names:
+            html += " " + str(index) + ". " + mark_safe(
                 '<a href="{}">{}{}{}</a>'.format(
                     reverse("admin:university_universitycontactperson_change",
                             args=(obj.contracts.latest().university_contact_persons.get(
-                                first_name=first_name.get('first_name'), last_name=last_name.get('last_name')).id,)),
+                                id=ids.get('id')).id,)),
                     first_name.get('first_name'), " ",
                     last_name.get('last_name'), ))
+            index += 1
         return mark_safe(html)
 
     get_university_contact_persons.short_description = "Osoby do kontaktu UEK"
 
     def get_company_contact_persons(self, obj: Partnership):
-        # todo write it better
 
         if obj.contracts.filter(partnership=obj.pk).count() == 0:
             return "brak"
 
         full_names = zip(obj.contracts.latest().company_contact_persons.all().values('first_name'),
-                         obj.contracts.latest().company_contact_persons.all().values('last_name'))
+                         obj.contracts.latest().company_contact_persons.all().values('last_name'),
+                         obj.contracts.latest().company_contact_persons.all().values('id'))
 
         html = ""
+        index = 1
 
-        for first_name, last_name in full_names:
-            html += "- " + mark_safe(
+        for first_name, last_name, ids in full_names:
+            html += " " + str(index) + ". " + mark_safe(
                 '<a href="{}">{}{}{}</a>'.format(
                     reverse("admin:company_companycontactperson_change",
                             args=(obj.contracts.latest().company_contact_persons.get(
-                                first_name=first_name.get('first_name'), last_name=last_name.get('last_name')).id,)),
+                                id=ids.get('id')).id,)),
                     first_name.get('first_name'), " ",
                     last_name.get('last_name'), ))
+            index += 1
         return mark_safe(html)
 
     get_company_contact_persons.short_description = "Osoby do kontaktu Firmy"
@@ -238,5 +240,3 @@ class PartnershipAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
         return mark_safe(self.status_html.get(obj.status) % obj.get_status_display())
 
     get_status_with_color.short_description = "Status"
-
-    # todo optimialize admin querysets, forms

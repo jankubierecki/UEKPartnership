@@ -19,6 +19,9 @@ class InstituteUnitToUniversityContactPersonInlineAdmin(ReadOnlyModelAdmin, admi
     autocomplete_fields = ["university_contact_person"]
 
 
+# TODO clean view on delete contact persons
+
+
 class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversityContactPersonInlineAdmin):
     extra = 0
     min_num = 0
@@ -31,6 +34,8 @@ class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversit
 @admin.register(InstituteUnit)
 class InstituteUnitAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     change_form_template = "admin/institute_unit_change_form.html"
+    change_list_template = "admin/institute_unit_change_list.html"
+
     list_display = ["name", "created_at", "updated_at"]
     search_fields = ["name"]
     list_filter = ["created_at", "updated_at"]

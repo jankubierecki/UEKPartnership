@@ -17,6 +17,8 @@ class CompanyToCompanyContactPersonInlineAdmin(admin.TabularInline):
     autocomplete_fields = ["company_contact_person"]
 
 
+# TODO clean view on delete contact persons
+
 class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInlineAdmin):
     extra = 0
     min_num = 0
@@ -30,6 +32,7 @@ class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInli
 class CompanyAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     change_form_template = "admin/company_change_form.html"
     change_list_template = "admin/company_change_list.html"
+
     list_display = ["name", "city", "street", "zip_code", "phone", "email", "industry", "get_website_url",
                     "created_at", "updated_at"]
     search_fields = ["name", "city", "zip_code", "industry", "company_contact_persons__first_name",

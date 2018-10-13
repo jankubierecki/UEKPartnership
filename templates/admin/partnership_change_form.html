@@ -2,7 +2,7 @@
 {% load i18n admin_urls static admin_modify compress %}
 
 {% block extrahead %}
-{#    {% compress js %}#}
+    {% compress js %}
         <script type="text/javascript" src="{% static "admin/js/jsi18n.js" %}"></script>
         {{ block.super }}
         {{ media.js }}
@@ -11,7 +11,7 @@
         <script type="text/javascript" src="{% static "university/js/contact_persons_autocomplete.js" %}"></script>
         <script type="text/javascript" src="{% static "university/js/partnership_autocomplete.js" %}"></script>
 
-{#    {% endcompress %}#}
+    {% endcompress %}
 {% endblock %}
 
 {% block extrastyle %}
