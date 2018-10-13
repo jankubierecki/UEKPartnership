@@ -11,7 +11,6 @@ $.fn.bindWithDelay = function( type, data, fn, timeout, throttle ) {
 
     // Allow delayed function to be removed with fn in unbind function
     fn.guid = fn.guid || ($.guid && $.guid++);
-    //ssdsadasd
     // Bind each separately so that each element has its own delay
     return this.each(function() {
 

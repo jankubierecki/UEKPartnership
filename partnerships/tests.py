@@ -221,4 +221,4 @@ class ContractCreationTestCase(TestCase):
 
     pass
 
-#TODO ADD WAY MORE TESTS
+# TODO ADD WAY MORE TESTS

@@ -40,7 +40,7 @@
                 {% endif %}
                 <tr class="{% cycle 'row1' 'row2' %}">{% for item in result.0 %}{{ item }}{% endfor %}</tr>
                 {% with result.1 as company %}
-                    {% if company.contracts.all %}
+                    {% if company.partnerships.all %}
                         <tr>
                             <td colspan="11">
                                 <table class="inner-table">
@@ -49,33 +49,53 @@
                                         <div class="text"><a>Nazwa współpracy</a></div>
                                     </th>
                                     <th scope="col">
-                                        <div class="text"><a>Data zawarcia umowy</a></div>
+                                        <div class="text"><a>Data zawarcia Współpracy</a></div>
                                     </th>
                                     <th scope="col">
                                         <div class="text"><a>Data ostatniego kontaktu</a></div>
                                     </th>
                                     <th scope="col">
-                                        <div class="text"><a>Jednostka Współpracująca UEK</a></div>
+                                        <div class="text" style="grid-column: span"><a>Umowy</a></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="text"><a>Jednostki Współpracujące UEK</a></div>
                                     </th>
                                     </thead>
                                     <tbody>
 
-                                    {% for contract in company.contracts.all|slice:":5" %}
+                                    {% for partnership in company.partnerships.all|slice:":3" %}
 
                                         <tr>
                                             <td>
-                                                <a href="{% url "admin:partnerships_partnership_change" contract.partnership.id %}">{{ contract.partnership.name }}</a>
+                                                <a href="{% url "admin:partnerships_partnership_change" partnership.id %}">{{ partnership.name }}</a>
                                             </td>
-                                            <td>{{ contract.partnership.start_date }}</td>
-                                            <td>{{ contract.partnership.last_contact_date }}</td>
+                                            <td>{{ partnership.start_date }}</td>
+                                            <td>{{ partnership.last_contact_date }}</td>
                                             <td>
-                                                <a href="{% url "admin:university_instituteunit_change" contract.institute_unit.id %}">{{ contract.institute_unit }}</a>
+                                                {% if partnership.contracts.count > 0 %}
+                                                    {% for contract in partnership.contracts.all|dictsort:"contract_date" %}
+                                                       {{ contract }} <br>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    {{ "brak umów" }}
+                                                {% endif %}
                                             </td>
+                                            <td>
+                                                {% if partnership.contracts.count > 0 %}
+                                                    {% for contract in partnership.contracts.all|dictsort:"contract_date" %}
+                                                        <a href="{% url "admin:university_instituteunit_change" contract.institute_unit.id %}">
+                                                        {{ contract.institute_unit.name }} <br>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    {{ "brak umów" }}
+                                                {% endif %}
 
+                                            </td>
                                         </tr>
                                     {% endfor %}
+
                                     {% with company.contracts.count as count %}
-                                        {% if count > 5 %}
+                                        {% if count > 1 %}
                                             <tr>
                                                 <td colspan="5">
                                                     <a href="{% url "admin:partnerships_partnership_changelist" %}?contract__company__id__exact={{ company.id }}">Wszystkie

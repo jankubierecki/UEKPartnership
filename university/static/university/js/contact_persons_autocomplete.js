@@ -1,15 +1,15 @@
 (function ($) {
 
     let company_id = "#id_company";
-    let company_value;
 
 
     function update_select(source_id, target_id, source_val) {
-        if (source_val["currentValue"] == null) {
+        if (source_val["currentValue"] == null) {           // company value is before company selected
             $(target_id).prop("disabled", true);
         }
         $(source_id).on('select2:select', function (e) {
-            source_val["currentValue"] = e.params.data['id'];
+
+            source_val["currentValue"] = e.params.data['id'];  // integer
             $(target_id).prop("disabled", false);
             $(target_id).val(null).trigger('change');
         });
@@ -26,12 +26,15 @@
         }
         $(target_id).djangoAdminSelect2({
             ajax: {
+
                 data: function (params) {
 
                     return {
                         term: params.term,
                         page: params.page,
-                        parent_id: source_val["currentValue"]
+                        parent_id: source_val["currentValue"],
+
+
                     };
                 }
 
@@ -64,33 +67,19 @@
 
     $(function () {
 
-        company_value = {currentValue: $(company_id).val()};
-        console.log(company_value);
-
-
-        // $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
-        //     update_select(company_id, this, company_value)
-        // });
-
-
         onElementInserted("body", ".field-company_contact_persons select.select2-hidden-accessible", function () {
-            $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
-                console.log(this);
-                console.log(company_value["currentValue"]);
-                update_select(company_id, this, company_value);
-            })
+            let company_value = {currentValue: $(company_id).val()};
+            let company_contact_persons = $(".field-company_contact_persons select.select2-hidden-accessible");
+
+            console.log(company_value);
+
+            update_select(company_id, company_contact_persons, company_value)
         });
 
 
-        // $(".field-university_contact_persons select.select2-hidden-accessible").each(function () {
-        //     let institute_id = $(this).closest(".dynamic-contracts").find(".field-institute_unit select");
-        //     let institute_unit_value = {currentValue: $(institute_id).val()};
-        //     update_select(institute_id, this, institute_unit_value)
-        // });
-        //
         // onElementInserted("body", ".field-university_contact_persons select.select2-hidden-accessible", function () {
         //     $(".field-company_contact_persons select.select2-hidden-accessible").each(function () {
-        //         let institute_id = $(this).closest(".dynamic-contracts").find(".field-institute_unit select");
+        //         let institute_id = $(this).closest(".dynamic-contracts").find(".field-institute_unit select") //  equals #id_contracts-0-company_contact_persons
         //         let institute_unit_value = {currentValue: $(institute_id).val()};
         //         update_select(institute_id, this, institute_unit_value)
         //     })

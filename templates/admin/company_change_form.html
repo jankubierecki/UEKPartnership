@@ -16,7 +16,7 @@
 {% block extrastyle %}
     {% compress css %}
         {{ block.super }}
-           {{ media.css}}
+        {{ media.css }}
         <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
     {% endcompress %}
 {% endblock %}
@@ -102,7 +102,7 @@
                     {% endcompress %}
                 {% endblock %}
 
-                 JavaScript for prepopulated fields
+                {#  JavaScript for prepopulated fields #}
                 {% prepopulated_fields_js %}
 
             </div>
