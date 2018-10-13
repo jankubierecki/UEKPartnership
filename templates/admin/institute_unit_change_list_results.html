@@ -62,27 +62,26 @@
                                     </th>
                                     </thead>
                                     <tbody>
+                                        {% for contract in institute_unit.partnerships.all|slice:":5" %}
 
-                                    {% for contract in institute_unit.contracts.all|slice:":5" %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url "admin:partnerships_partnership_change" contract.partnership.id %}">{{ contract.partnership.name }}</a>
+                                                </td>
+                                                <td>{{ contract.contract_number }}</td>
+                                                <td>{{ contract.partnership.contract_date }}</td>
+                                                <td>{{ contract.partnership.last_contact_date }}</td>
+                                                <td>
+                                                    <a href="{% url "admin:company_company_change" contract.partnership.company.id %}">{{ contract.partnership.company }}</a>
+                                                </td>
 
-                                        <tr>
-                                            <td>
-                                                <a href="{% url "admin:partnerships_partnership_change" partnership.contracts.get().all() %}">{{ partnership.contracts.name }}</a>
-                                            </td>
-                                            <td>{{ contract.contract_number }}</td>
-                                            <td>{{ contract.partnership.contract_date }}</td>
-                                            <td>{{ contract.partnership.last_contact_date }}</td>
-                                            <td>
-                                                <a href="{% url "admin:company_company_change" contract.company.id %}">{{ contract.company }}</a>
-                                            </td>
-
-                                        </tr>
-                                    {% endfor %}
-                                    {% with company.contracts.count as count  %}
+                                            </tr>
+                                        {% endfor %}
+                                    {% with company.partnerships.count as count  %}
                                     {% if count > 5 %}
                                         <tr>
                                             <td colspan="5">
-                                                <a href="{% url "admin:partnerships_partnership_changelist" %}?contract__company__id__exact={{ company.id }}">Wszystkie
+                                                <a href="{% url "admin:partnerships_partnership_changelist" %}?partnership__company__id__exact={{ company.id }}">Wszystkie
                                                     współprace tej firmy ( {{ count }} )</a>
                                             </td>
                                         </tr>
