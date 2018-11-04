@@ -5,9 +5,20 @@ ALLOWED_HOSTS = [os.environ['DOMAIN'], 'www.' + os.environ['DOMAIN'], 'localhost
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 
+MIDDLEWARE_CLASSES = (
+    'django_cas_ng.middleware.CASMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_cas_ng.backends.CASBackend',
+)
+
 ADMINS = (
     ('Jan Kubierecki', 'jankubierecki@gmail.com'),
 )
+
+# CAS_SERVER_URL = "uek.krakow.pl"
 
 MANAGERS = ADMINS
 
