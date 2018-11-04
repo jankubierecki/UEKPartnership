@@ -5,8 +5,6 @@ from django.utils import timezone
 
 from django.test import TestCase
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from authorization.models import User
 from partnerships.admin import PartnershipModelForm
 from partnerships.models import Partnership
@@ -73,18 +71,25 @@ class PartnershipCreationTestCase(TestCase):
         # Then
         self.assertContains(response, partnership_1.name, count=1)
 
-    # def test_name_autocomplete_not_match(self):
-    #     """ tests if not matches wrong query """
-    #
-    #     # Given
-    #     self.partnership.save()
-    #     self.client.force_login(self.user, backend=None)
-    #
-    #     # When
-    #     response = self.client.get('/partnership_autocomplete/?term=test', follow=True)
-    #
-    #     # Then
-    #     self.assertNotContains(response, self.partnership.name)
+    def test_name_autocomplete_not_match(self):
+        """ tests if not matches wrong query """
+
+        # Given
+
+        user = self.basic_user()
+        user.save()
+        self.client.force_login(user, backend=None)
+
+        partnership = self.basic_partnership()
+        partnership.save()
+
+        self.client.force_login(user, backend=None)
+
+        # When
+        response = self.client.get('/partnership_autocomplete/?term=test', follow=True)
+
+        # Then
+        self.assertNotContains(response, partnership.name)
 
     def basic_user(self):
         return User.objects.create_user(email=str(uuid.uuid4()) + '@test.com',
@@ -232,5 +237,3 @@ class ContractCreationTestCase(TestCase):
     """ tests concract module with isolation of partnership """
 
     pass
-
-# TODO ADD WAY MORE TESTS
