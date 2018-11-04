@@ -55,9 +55,6 @@
                                         <div class="text"><a>Data zawarcia umowy</a></div>
                                     </th>
                                     <th scope="col">
-                                        <div class="text"><a>Data ostatniego kontaktu</a></div>
-                                    </th>
-                                    <th scope="col">
                                         <div class="text"><a>Firma współpracująca</a></div>
                                     </th>
                                     </thead>
@@ -65,16 +62,12 @@
 
                                     {% for contract in institute_unit.contracts.all|slice:":5" %}
                                         <tr>
-                                            <td>
-                                                <a href="{% url "admin:partnerships_partnership_change" contract.partnership.id %}">{{ contract.partnership.name }}</a>
-                                            </td>
+                                            <a href="{% url "admin:partnerships_partnership_change" contract.partnership.id %}">{{ contract.partnership.name }}</a>
                                             <td>{{ contract.contract_number }}</td>
-                                            <td>{{ contract.partnership.start_date }}</td>
-                                            <td>{{ contract.partnership.last_contact_date }}</td>
+                                            <td>{{ contract.contract_date }}</td>
                                             <td>
                                                 <a href="{% url "admin:company_company_change" contract.partnership.company.id %}">{{ contract.partnership.company }}</a>
                                             </td>
-
                                         </tr>
                                     {% endfor %}
                                     {% with company.partnerships.count as count %}

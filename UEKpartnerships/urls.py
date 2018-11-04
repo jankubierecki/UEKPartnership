@@ -20,12 +20,18 @@ from django.urls import path, include
 from partnerships.views import ErrorEmailTest
 from university.views import PartnershipAutocomplete, CompanyAutocomplete, InstituteUnitAutocomplete
 
+import django_cas_ng.views
+
 urlpatterns = [
     path('partnership_autocomplete/', login_required(PartnershipAutocomplete.as_view())),
     path('company_autocomplete/', login_required(CompanyAutocomplete.as_view())),
     path('institute_unit_autocomplete/', login_required(InstituteUnitAutocomplete.as_view())),
     path('', admin.site.urls),
     path('test500/', login_required(ErrorEmailTest.as_view())),
+    path('accounts/login', django_cas_ng.views.login, name='cas_ng_login'),
+    path('accounts/logout', django_cas_ng.views.logout, name='cas_ng_logout'),
+    path('accounts/callback', django_cas_ng.views.callback, name='cas_ng_proxy_callback'),
+
 ]
 admin.site.site_header = "Współprace Biznesowe UEK"
 admin.site.site_title = "Współprace Biznesowe UEK"
