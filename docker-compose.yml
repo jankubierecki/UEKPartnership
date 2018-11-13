@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   postgres:
-    image: postgres:10-alpine
+    image: postgres:alpine
     restart: unless-stopped
     volumes:
       - /etc/postgres/data:/var/lib/postgresql/data
@@ -21,8 +21,6 @@ services:
     restart: unless-stopped
     image: nginx:latest
     ports:
-      - "80:80"
-      - "443:443"
       - "9000:5432"
     volumes:
       - static:/partnerships/static
