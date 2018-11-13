@@ -30,8 +30,8 @@ unittests:
     - docker-compose pull postgres
     - docker-compose -p uekpartnership up -d postgres django
     - docker ps
-    - docker inspect --format='{{.Name}}' $(docker ps -aq --no-trunc) | cut -c2-
-#    - docker logs --details uekpartnership_postgres_1:pg
+    - docker inspect --format='{{.Name}}' $(docker ps -aq --no-trunc) | cut -c2- | grep postgres
+    - docker logs --details $(docker inspect --format='{{.Name}}' $(docker ps -aq --no-trunc) | cut -c2- | grep postgres)
     - python3 wait_for_container.py django postgres
     - ./wait_for_postgres.sh
     - docker-compose exec -T django /partnerships/run_tests.sh
