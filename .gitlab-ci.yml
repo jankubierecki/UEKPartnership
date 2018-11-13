@@ -28,7 +28,7 @@ unittests:
     - docker pull registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
     - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF registry.gitlab.com/jankubierecki/uekpartnership:latest
     - docker-compose pull postgres
-    - docker logs -f --until=2s
+    - docker logs --details uekpartnership_postgres_1
     - docker-compose -p uekpartnership up -d postgres django
     - python3 wait_for_container.py django postgres
     - ./wait_for_postgres.sh
