@@ -23,7 +23,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "5432:5432"
     volumes:
       - static:/partnerships/static
       - nginx_config:/partnerships/nginx:ro
