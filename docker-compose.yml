@@ -4,38 +4,38 @@ services:
     image: postgres:10-alpine
     restart: unless-stopped
     volumes:
-    - /etc/postgres/data:/var/lib/postgresql/data
+      - /etc/postgres/data:/var/lib/postgresql/data
   django:
     image: registry.gitlab.com/jankubierecki/uekpartnership:latest
     restart: unless-stopped
     depends_on:
-    - postgres
-      condition: service_healthy
+      - postgres
+        condition: service_healthy
     volumes:
-    - static:/partnerships/static
-    - nginx_config:/partnerships/nginx
-    - /var/log/gunicorn:/var/log/gunicorn
+      - static:/partnerships/static
+      - nginx_config:/partnerships/nginx
+      - /var/log/gunicorn:/var/log/gunicorn
     env_file:
-    - ".env"
+      - ".env"
   nginx:
     restart: unless-stopped
     image: nginx:latest
     ports:
-    - "80:80"
-    - "443:443"
+      - "80:80"
+      - "443:443"
     volumes:
-    - static:/partnerships/static
-    - nginx_config:/partnerships/nginx:ro
-    - /etc/letsencrypt:/etc/letsencrypt
+      - static:/partnerships/static
+      - nginx_config:/partnerships/nginx:ro
+      - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
-    - django
+      - django
     entrypoint: >
-      bash -c "cp /partnerships/nginx/default.conf /etc/nginx/conf.d/
-      && sed -i 's/WWW_DOMAIN_NAME/www.${DOMAIN}/g' /etc/nginx/conf.d/default.conf
-      && sed -i 's/DOMAIN_NAME/${DOMAIN}/g' /etc/nginx/conf.d/default.conf
-      && nginx -g 'daemon off;'"
+     bash -c "cp /partnerships/nginx/default.conf /etc/nginx/conf.d/
+     && sed -i 's/WWW_DOMAIN_NAME/www.${DOMAIN}/g' /etc/nginx/conf.d/default.conf
+     && sed -i 's/DOMAIN_NAME/${DOMAIN}/g' /etc/nginx/conf.d/default.conf
+     && nginx -g 'daemon off;'"
     env_file:
-    - ".env"
+      - ".env"
 
 
 volumes:
