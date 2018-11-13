@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
-#      condition: service_healthy
+      condition: service_healthy
     volumes:
       - static:/partnerships/static
       - nginx_config:/partnerships/nginx
