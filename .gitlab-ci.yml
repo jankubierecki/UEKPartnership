@@ -28,9 +28,11 @@ unittests:
     - docker pull registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
     - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF registry.gitlab.com/jankubierecki/uekpartnership:latest
     - docker-compose pull postgres
+    - echo $CI_JOB_ID
 #    - docker logs --details uekpartnership_postgres_1:pg
     - docker-compose -p uekpartnership up -d postgres django
     - docker ps
+    - docker ps -q -f "label=com.gitlab.gitlab-runner.job.id=$CI_JOB_ID"
     - python3 wait_for_container.py django postgres
     - ./wait_for_postgres.sh
     - docker-compose exec -T django /partnerships/run_tests.sh
