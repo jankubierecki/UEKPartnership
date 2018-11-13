@@ -10,19 +10,19 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
-      condition: service_healthy
+#      condition: service_healthy
     volumes:
       - static:/partnerships/static
       - nginx_config:/partnerships/nginx
       - /var/log/gunicorn:/var/log/gunicorn
     env_file:
       - ".env"
-
   nginx:
     restart: unless-stopped
     image: nginx:latest
     ports:
-      - "9000:5432"
+      - "80:80"
+      - "443:443"
     volumes:
       - static:/partnerships/static
       - nginx_config:/partnerships/nginx:ro
