@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   postgres:
-    image: postgres:10-alpine
+    image: postgres
     restart: unless-stopped
     volumes:
       - /etc/postgres/data:/var/lib/postgresql/data
