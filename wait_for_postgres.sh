@@ -1,2 +1,2 @@
-until docker run --rm --link uekpartnership_postgres_1:pg --net uekpartnership_default postgres pg_isready -U postgres -h pg -p 5432; do sleep 2; done;
+until docker run --rm --link uekpartnership_postgres_1:pg --net uekpartnership_default postgres:alpine pg_isready -U postgres -h pg -p 5432; do sleep 2; done;
 echo "postgres is ready"
