@@ -233,7 +233,7 @@ class PartnershipDatesTestCase(TestCase):
                 '__all__'))
 
 
-class ContractCreationTestCase(TestCase):
-    """ tests concract module with isolation of partnership """
+class PartnershipWithContractsCreationTestCase(TestCase):
+    """ tests partnerships that have one or more contracts """
 
     pass
