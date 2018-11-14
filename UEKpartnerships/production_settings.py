@@ -18,7 +18,7 @@ ADMINS = (
     ('Jan Kubierecki', 'jankubierecki@gmail.com'),
 )
 
-# CAS_SERVER_URL = "uek.krakow.pl"
+CAS_SERVER_URL = "student.uek.krakow.pl"
 
 MANAGERS = ADMINS
 
