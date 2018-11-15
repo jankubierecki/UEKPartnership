@@ -14,11 +14,11 @@ AUTHENTICATION_BACKENDS = (
     'django_cas_ng.backends.CASBackend',
 )
 
+CAS_SERVER_URL = "student.uek.krakow.pl"
+
 ADMINS = (
     ('Jan Kubierecki', 'jankubierecki@gmail.com'),
 )
-
-CAS_SERVER_URL = "student.uek.krakow.pl"
 
 MANAGERS = ADMINS
 
@@ -42,8 +42,7 @@ DATABASES = {
     }
 }
 
-# MAIL_NOTIFICATIONS = True
-
+MAIL_NOTIFICATIONS = False
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = os.environ['EMAIL_HOST']
