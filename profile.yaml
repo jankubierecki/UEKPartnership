@@ -30,7 +30,7 @@ pep8:
   enable:
   - W601
   options:
-    max-line-length: 80
+    max-line-length: 120
 
 mccabe:
   run: false
