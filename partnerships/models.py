@@ -63,7 +63,7 @@ class Contract(models.Model):
     institute_unit = models.ForeignKey(InstituteUnit, on_delete=models.SET_NULL, null=True,
                                        related_name="contracts",
                                        verbose_name="Jednostka Współpracująca")
-    partnership = models.ForeignKey(Partnership, on_delete=models.CASCADE, null=True, blank=True,
+    partnership = models.ForeignKey(Partnership, on_delete=models.CASCADE,
                                     related_name="contracts",
                                     verbose_name="Współprace")
     company_contact_persons = models.ManyToManyField(CompanyContactPerson,
