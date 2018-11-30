@@ -1,13 +1,13 @@
 import uuid
-from datetime import timedelta
+import datetime as dt
 
+from django.db import IntegrityError, transaction
 from django.utils import timezone
-
 from django.test import TestCase
 
 from authorization.models import User
 from partnerships.admin import PartnershipModelForm
-from partnerships.models import Partnership
+from partnerships.models import Partnership, Contract
 
 from company.models import Company
 
@@ -148,7 +148,7 @@ class PartnershipDatesTestCase(TestCase):
 
         # When
         form = PartnershipModelForm(
-            data={'start_date': self.partnership.start_date + timedelta(days=10),
+            data={'start_date': self.partnership.start_date + dt.timedelta(days=10),
                   'last_contact_date': self.partnership.last_contact_date,
                   'status': self.partnership.status})
 
@@ -162,8 +162,8 @@ class PartnershipDatesTestCase(TestCase):
 
         # When
         form = PartnershipModelForm(
-            data={'start_date': self.partnership.start_date - timedelta(days=10),
-                  'last_contact_date': self.partnership.last_contact_date - timedelta(days=10),
+            data={'start_date': self.partnership.start_date - dt.timedelta(days=10),
+                  'last_contact_date': self.partnership.last_contact_date - dt.timedelta(days=10),
                   'status': self.partnership.status})
         # Then
         self.assertTrue(form.is_valid())
@@ -173,8 +173,8 @@ class PartnershipDatesTestCase(TestCase):
 
         # When
         form = PartnershipModelForm(
-            data={'start_date': self.partnership.start_date - timedelta(days=10),
-                  'last_contact_date': self.partnership.last_contact_date + timedelta(days=10),
+            data={'start_date': self.partnership.start_date - dt.timedelta(days=10),
+                  'last_contact_date': self.partnership.last_contact_date + dt.timedelta(days=10),
                   'status': self.partnership.status})
 
         # Then
@@ -192,8 +192,8 @@ class PartnershipDatesTestCase(TestCase):
 
         # When
         form = PartnershipModelForm(
-            data={'start_date': self.partnership.start_date + timedelta(days=10),
-                  'last_contact_date': self.partnership.last_contact_date + timedelta(days=10),
+            data={'start_date': self.partnership.start_date + dt.timedelta(days=10),
+                  'last_contact_date': self.partnership.last_contact_date + dt.timedelta(days=10),
                   'status': self.partnership.status})
 
         # Then
@@ -204,8 +204,8 @@ class PartnershipDatesTestCase(TestCase):
 
         # When
         form = PartnershipModelForm(
-            data={'start_date': self.partnership.start_date + timedelta(days=10),
-                  'last_contact_date': self.partnership.last_contact_date + timedelta(days=12),
+            data={'start_date': self.partnership.start_date + dt.timedelta(days=10),
+                  'last_contact_date': self.partnership.last_contact_date + dt.timedelta(days=12),
                   'status': self.partnership.status})
 
         # Then
@@ -220,8 +220,8 @@ class PartnershipDatesTestCase(TestCase):
 
         # When
         form = PartnershipModelForm(
-            data={'start_date': self.partnership.start_date + timedelta(days=10),
-                  'last_contact_date': self.partnership.last_contact_date + timedelta(days=10),
+            data={'start_date': self.partnership.start_date + dt.timedelta(days=10),
+                  'last_contact_date': self.partnership.last_contact_date + dt.timedelta(days=10),
                   'status': self.partnership.status})
 
         # Then
@@ -233,7 +233,92 @@ class PartnershipDatesTestCase(TestCase):
                 '__all__'))
 
 
-class ContractCreationTestCase(TestCase):
-    """ tests concract module with isolation of partnership """
+class PartnershipWithContractsCreationTestCase(TestCase):
+    """ tests partnerships that have one or more contracts """
 
-    pass
+    def basic_contract(self):
+        return Contract(contract_date=dt.date.today(), contract_number=1111111111)
+
+    def basic_company(self):
+        return Company.objects.create(name='example',
+                                      created_at=dt.date.today(),
+                                      email='example@example.com',
+                                      website='https://www.example.com',
+                                      krs_code=1111111111,
+                                      nip_code=1111111111)
+
+    def basic_partnership(self):
+        return Partnership(start_date=timezone.now(), last_contact_date=dt.date.today(),
+                           name='example',
+                           type_of_partnership='science', kind_of_partnership='barter',
+                           status='finished',
+                           company=self.basic_company())
+
+    def test_contract_without_partnership_fail(self):
+
+        # When
+        contract = self.basic_contract()
+
+        # Then
+        try:
+            with transaction.atomic():
+                contract.save()
+        except IntegrityError:
+            pass
+        else:
+            self.fail(msg="Contract has to have partnership")
+
+        self.assertEqual(Contract.objects.count(), 0)
+        self.assertIsNone(contract.partnership_id)
+
+    def test_partnership_with_one_contract(self):
+
+        # When
+        partnership = self.basic_partnership()
+        partnership.save()
+
+        contract = self.basic_contract()
+        contract.partnership = partnership
+        contract.save()
+
+        # Then
+        self.assertEqual(contract.partnership.id, partnership.id)
+        self.assertEqual(partnership.contracts.count(), 1)
+
+    def test_partnership_can_have_multiple_contracts(self):
+
+        # When
+        partnership = self.basic_partnership()
+        partnership.save()
+
+        contract1 = self.basic_contract()
+        contract1.partnership = partnership
+        contract1.save()
+
+        contract2 = self.basic_contract()
+        contract2.partnership = partnership
+        contract2.save()
+
+        contract3 = self.basic_contract()
+        contract3.partnership = partnership
+        contract3.save()
+
+        # Then
+        self.assertEqual(partnership.contracts.count(), 3)
+
+    def test_contract_can_be_signed_to_one_partnership(self):
+
+        # When
+        partnership1 = self.basic_partnership()
+        partnership1.save()
+
+        partnership2 = self.basic_partnership()
+        partnership2.save()
+
+        contract = self.basic_contract()
+        contract.partnership = partnership1
+        contract.save()
+
+        contract.partnership = partnership2
+
+        self.assertEqual(contract.partnership.id, partnership2.id)

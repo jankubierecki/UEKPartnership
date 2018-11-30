@@ -1,5 +1,5 @@
 from django import template
-from django.contrib.admin.templatetags.admin_list import result_list, result_headers, result_hidden_fields, ResultList, \
+from django.contrib.admin.templatetags.admin_list import result_headers, result_hidden_fields, ResultList, \
     items_for_result
 
 register = template.Library()
