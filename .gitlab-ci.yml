@@ -13,7 +13,7 @@ build:
   stage: build
   script:
     - echo "BUILD:build"
-    - docker login registry.gitlab.com -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+    - echo $DOCKER_PASSWORD | docker login registry.gitlab.com -u $DOCKER_LOGIN --password-stdin
     - docker build -t registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF .
     - docker push registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
 unittests:
@@ -39,7 +39,7 @@ push:
   stage: push
   script:
     - echo "PUSH:push"
-    - docker login registry.gitlab.com -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+    - echo $DOCKER_PASSWORD | docker login registry.gitlab.com -u $DOCKER_LOGIN --password-stdin
     - docker pull registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF
     - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$CI_BUILD_REF registry.gitlab.com/jankubierecki/uekpartnership:latest
     - docker push registry.gitlab.com/jankubierecki/uekpartnership:latest
