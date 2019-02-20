@@ -19,9 +19,6 @@ class InstituteUnitToUniversityContactPersonInlineAdmin(ReadOnlyModelAdmin, admi
     autocomplete_fields = ["university_contact_person"]
 
 
-# TODO clean view on delete contact persons
-
-
 class UniversityContactPersonToInstituteUnitInlineAdmin(InstituteUnitToUniversityContactPersonInlineAdmin):
     extra = 0
     min_num = 0
