@@ -17,8 +17,6 @@ class CompanyToCompanyContactPersonInlineAdmin(admin.TabularInline):
     autocomplete_fields = ["company_contact_person"]
 
 
-# TODO clean view on delete contact persons
-
 class CompanyContactPersonToCompanyInlineAdmin(CompanyToCompanyContactPersonInlineAdmin):
     extra = 0
     min_num = 0
