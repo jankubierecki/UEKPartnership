@@ -12,10 +12,8 @@ services:
       - postgres
     volumes:
       - static:/partnerships/static
-      - nginx_config:/partnerships/nginx
       - /var/log/gunicorn:/var/log/gunicorn
     env_file:
       - ".env"
 volumes:
   static:
-  nginx_config:
