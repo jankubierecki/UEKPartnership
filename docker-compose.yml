@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     image: nginx:latest
     ports:
-      - "80:80"
+      - "8000:80"
     volumes:
       - static:/partnerships/static
       - nginx_config:/partnerships/nginx:ro
@@ -33,7 +33,6 @@ services:
      && nginx -g 'daemon off;'"
     env_file:
       - ".env"
-
 
 volumes:
   static:
