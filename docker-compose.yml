@@ -12,8 +12,29 @@ services:
       - postgres
     volumes:
       - static:/partnerships/static
+      - nginx_config:/partnerships/nginx
       - /var/log/gunicorn:/var/log/gunicorn
     env_file:
       - ".env"
+  nginx:
+    restart: unless-stopped
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - static:/partnerships/static
+      - nginx_config:/partnerships/nginx:ro
+    depends_on:
+      - django
+    entrypoint: >
+     bash -c "cp /partnerships/nginx/default.conf /etc/nginx/conf.d/
+     && sed -i 's/WWW_DOMAIN_NAME/www.${DOMAIN}/g' /etc/nginx/conf.d/default.conf
+     && sed -i 's/DOMAIN_NAME/${DOMAIN}/g' /etc/nginx/conf.d/default.conf
+     && nginx -g 'daemon off;'"
+    env_file:
+      - ".env"
+
+
 volumes:
   static:
+  nginx_config:
