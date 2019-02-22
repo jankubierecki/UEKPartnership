@@ -41,7 +41,7 @@ push:
     - echo "PUSH:push"
     - echo $DOCKER_PASSWORD | docker login registry.gitlab.com -u $DOCKER_LOGIN --password-stdin
     - docker pull registry.gitlab.com/jankubierecki/uekpartnership:test
-    - docker tag registry.gitlab.com/jankubierecki/uekpartnership:$test registry.gitlab.com/jankubierecki/uekpartnership:test
+    - docker tag registry.gitlab.com/jankubierecki/uekpartnership:test registry.gitlab.com/jankubierecki/uekpartnership:test
     - docker push registry.gitlab.com/jankubierecki/uekpartnership:test
 
 deploy_test:
