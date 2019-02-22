@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     image: nginx:latest
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
       - static:/partnerships/static
       - nginx_config:/partnerships/nginx:ro
