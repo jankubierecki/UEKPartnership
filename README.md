@@ -22,7 +22,7 @@
 ### Installing
 1. ```docker volume create pgdata```
 2. ```docker-compose up```
-3. ```docker exec -it <container_id> /bin/bash
+3. ```docker exec -it <container_id> /bin/bash```
 4. ```python manage.py createsuperuser```
 5. ```visit localhost:8000```
 
