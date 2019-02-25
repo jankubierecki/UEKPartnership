@@ -22,11 +22,10 @@
 ### Installing
 1. ```docker volume create pgdata```
 2. ```docker-compose up```
-3. ```python manage.py migrate```
+3. ```docker exec -it <container_id> /bin/bash
 4. ```python manage.py createsuperuser```
-5. ```python manage.py runserver```
-6. ```go to localhost:8000```
+5. ```visit localhost:8000```
 
 
 ### Note
-under the development
+I've designed this application for the dean of my university. You can check it out at [https://wspolpracebiznesowe.uek.krakow.pl](https://wspolpracebiznesowe.uek.krakow.pl). It remains closed for now, and I don't expect this project to be develop in the nearliest future.
