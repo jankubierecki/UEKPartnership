@@ -53,7 +53,6 @@ EMAIL_PORT = int(os.environ['EMAIL_PORT'])
 SENTRY_DSN = os.environ['SENTRY_DSN']
 
 if SENTRY_DSN is not None:
-    print(SENTRY_DSN, 'asd')
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()]
