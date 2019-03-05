@@ -52,6 +52,6 @@ DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 EMAIL_PORT = int(os.environ['EMAIL_PORT'])
 
 sentry_sdk.init(
-    dsn="https://77dfc23bd01b4ed3beb048b1c12b8c17@sentry.io/1406346",
+    dsn=os.environ['SENTRY_SDK'],
     integrations=[DjangoIntegration()]
 )
