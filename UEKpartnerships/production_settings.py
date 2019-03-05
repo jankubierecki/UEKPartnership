@@ -50,8 +50,9 @@ EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 SERVER_EMAIL = os.environ['SERVER_MAIL']
 DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 EMAIL_PORT = int(os.environ['EMAIL_PORT'])
+SENTRY_DSN = os.environ['SENTRY_DSN']
 
 sentry_sdk.init(
-    dsn=os.environ['SENTRY_SDK'],
+    dsn=SENTRY_DSN,
     integrations=[DjangoIntegration()]
 )
