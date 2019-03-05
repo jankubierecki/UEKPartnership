@@ -14,8 +14,8 @@ build:
   script:
     - echo "BUILD:build"
     - echo $DOCKER_PASSWORD | docker login registry.gitlab.com -u $DOCKER_LOGIN --password-stdin
-    - docker build -t registry.gitlab.com/jankubierecki/uekpartnership:test .
-    - docker push registry.gitlab.com/jankubierecki/uekpartnership:test
+    - docker build -t registry.gitlab.com/jankubierecki/uekpartnership:latest .
+    - docker push registry.gitlab.com/jankubierecki/uekpartnership:latest
 unittests:
   stage: test
   script:
@@ -25,8 +25,8 @@ unittests:
     - pip3 install --upgrade pip
     - pip3 install docker-compose
     - export PYTHONUNBUFFERED=1
-    - docker pull registry.gitlab.com/jankubierecki/uekpartnership:test
-    - docker tag registry.gitlab.com/jankubierecki/uekpartnership:test registry.gitlab.com/jankubierecki/uekpartnership:test
+    - docker pull registry.gitlab.com/jankubierecki/uekpartnership:latest
+    - docker tag registry.gitlab.com/jankubierecki/uekpartnership:latest registry.gitlab.com/jankubierecki/uekpartnership:latest
     - docker-compose pull postgres
     - docker-compose -p uekpartnership up -d postgres django
     - python3 wait_for_container.py django postgres
@@ -40,45 +40,45 @@ push:
   script:
     - echo "PUSH:push"
     - echo $DOCKER_PASSWORD | docker login registry.gitlab.com -u $DOCKER_LOGIN --password-stdin
-    - docker pull registry.gitlab.com/jankubierecki/uekpartnership:test
-    - docker tag registry.gitlab.com/jankubierecki/uekpartnership:test registry.gitlab.com/jankubierecki/uekpartnership:test
-    - docker push registry.gitlab.com/jankubierecki/uekpartnership:test
+    - docker pull registry.gitlab.com/jankubierecki/uekpartnership:latest
+    - docker tag registry.gitlab.com/jankubierecki/uekpartnership:latest registry.gitlab.com/jankubierecki/uekpartnership:latest
+    - docker push registry.gitlab.com/jankubierecki/uekpartnership:latest
 
-deploy_test:
-  stage: deploy_test
-  script:
-    - echo "DEPLOY:deploy_test"
-    - apk add --update --no-cache openssh
-    - mkdir -p ~/.ssh
-    - echo "$TEST_SERVER_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./docker-compose.yml ./restart_docker.sh root@kubierecki.pl:/root/UEKPartnership/
-    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@kubierecki.pl "/root/UEKPartnership/restart_docker.sh"
+#deploy_test:
+#  stage: deploy_test
+#  script:
+#    - echo "DEPLOY:deploy_test"
+#    - apk add --update --no-cache openssh
+#    - mkdir -p ~/.ssh
+#    - echo "$TEST_SERVER_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+#    - chmod 600 ~/.ssh/id_rsa
+#    - scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./docker-compose.yml ./restart_docker.sh root@kubierecki.pl:/root/UEKPartnership/
+#    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@kubierecki.pl "/root/UEKPartnership/restart_docker.sh"
+#
+#  only:
+#    - master
+#  environment:
+#    name: test
 
-  only:
-    - master
-  environment: 
-    name: test
-
-integration_test:
-  image: python:3.6
-  stage: integration_test
-  script:
-    - echo "INTEGRATION_TEST:test"
-    - curl https://kubierecki.pl
-
-deploy_staging:
-  stage: deploy
-  script:
-    - echo "DEPLOY:deploy_staging"
-  when: manual
-  environment:
-    name: staging
-
-deploy_production:
-  stage: deploy
-  script:
-    - echo "DEPLOY:deploy_production"
-  when: manual
-  environment:
-    name: production
+#integration_test:
+#  image: python:3.6
+#  stage: integration_test
+#  script:
+#    - echo "INTEGRATION_TEST:test"
+#    - curl https://kubierecki.pl
+#
+#deploy_staging:
+#  stage: deploy
+#  script:
+#    - echo "DEPLOY:deploy_staging"
+#  when: manual
+#  environment:
+#    name: staging
+#
+#deploy_production:
+#  stage: deploy
+#  script:
+#    - echo "DEPLOY:deploy_production"
+#  when: manual
+#  environment:
+#    name: production
