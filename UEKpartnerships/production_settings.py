@@ -6,16 +6,12 @@ ALLOWED_HOSTS = [os.environ['DOMAIN'], 'www.' + os.environ['DOMAIN'], 'localhost
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 
-MIDDLEWARE_CLASSES = (
-    'django_cas_ng.middleware.CASMiddleware',
-)
-
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'django_cas_ng.backends.CASBackend',
 )
 
-CAS_SERVER_URL = "student.uek.krakow.pl"
+CAS_SERVER_URL = "https://logowanie.uek.krakow.pl/cas/"
 
 ADMINS = (
     ('Jan Kubierecki', 'jankubierecki@gmail.com'),
