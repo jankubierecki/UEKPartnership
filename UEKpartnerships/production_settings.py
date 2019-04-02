@@ -12,6 +12,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 CAS_SERVER_URL = "https://logowanie.uek.krakow.pl/cas/"
+CAS_EXTRA_LOGIN_PARAMS = {'next_page': '/next_page'}
+CAS_ADMIN_PREFIX = '/next_page'
 
 ADMINS = (
     ('Jan Kubierecki', 'jankubierecki@gmail.com'),

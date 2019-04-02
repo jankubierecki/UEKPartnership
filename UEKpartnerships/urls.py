@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.urls import path, include
+from django.urls import path
 
 from partnerships.views import ErrorEmailTest
 from university.views import PartnershipAutocomplete, CompanyAutocomplete, InstituteUnitAutocomplete
+
+import authorization.views
 
 import django_cas_ng.views
 
@@ -31,6 +33,7 @@ urlpatterns = [
     path('accounts/login', django_cas_ng.views.login, name='cas_ng_login'),
     path('accounts/logout', django_cas_ng.views.logout, name='cas_ng_logout'),
     path('accounts/callback', django_cas_ng.views.callback, name='cas_ng_proxy_callback'),
+    path('next_page', authorization.views.next_page, name='next_page'),
 
 ]
 admin.site.site_header = "Współprace Biznesowe UEK"

@@ -9,6 +9,31 @@
     {% compress css %}
         {{ block.super }}
         <style>
+
+            .login-submit {
+                left: 19%;
+                position: relative;
+
+            }
+
+            #dupa {
+                background-color: rgba(76, 175, 80, 1);
+            }
+
+
+            #dupa2 {
+                background-color: #6b1c1c;
+
+            }
+
+            #dupa, #dupa2 {
+                margin-top: 20px;
+            }
+
+            #dupa2:active, #dupa2:focus, #dupa2:hover {
+                background-color: #6b1c1c!important;
+            }
+
             html, body, #container {
                 min-height: 100%;
             }
@@ -132,6 +157,7 @@
                 color: white;
                 border: 0 !important;
             }
+
         </style>
         <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}"/>
         {% if LANGUAGE_BIDI %}
