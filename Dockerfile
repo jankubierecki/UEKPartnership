@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6-alpine
 ENV PYTHONBUFFERED 1
 ENV DJANGO_SETTINGS_MODULE UEKpartnerships.production_settings
 
